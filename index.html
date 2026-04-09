@@ -457,4 +457,465 @@ function rCal(){
     let cls='dc';
     if(isT)cls+=' tod';
     else if(hd&&hd[1]==='h')cls+=' hh';
-    else if(hd&&hd[1]==='v'
+    else if(hd&&hd[1]==='v')cls+=' hv2';
+    else if(hd&&hd[1]==='m')cls+=' hm';
+    else if(vs.length)cls+=' hv';
+    const hc=hd?(hd[1]==='h'?'#c0392b':hd[1]==='v'?'#2980b9':'#7f8c8d'):null;
+    const nc=isT?'#3a6b35':(hc||'#2c2c1e');
+    h+='<div class="'+cls+'" onclick="goDay(\''+ds+'\')">';
+    h+='<div class="dc-n" style="font-weight:'+(isT?700:400)+';color:'+nc+';">'+d+'</div>';
+    if(hd)h+='<div class="dc-h" style="color:'+hc+';">'+e(hd[0])+'</div>';
+    const names=[...new Set(vs.map(v=>{const c=S.customers.find(c=>c.id===v.custId);return c?c.name.split(' ')[0]:'?';}))];
+    if(names[0])h+='<div class="dc-c">'+e(names[0])+'</div>';
+    if(names.length>1)h+='<div style="font-size:8px;color:#7a6e55;">+'+(names.length-1)+'</div>';
+    h+='</div>';
+  }
+  h+='</div></div>';
+  const mv=vim(UI.yr,UI.mo);
+  const rev=mv.reduce((s,v)=>s+vt(v),0);
+  if(mv.length>0){
+    h+='<div class="card" style="padding:8px 12px;margin-top:8px;font-size:13px;">';
+    h+='<span style="color:#7a6e55;">סיכום: </span><b>'+mv.length+'</b> ביקורים &nbsp;·&nbsp; ';
+    h+='<b style="color:#3a6b35;">₪'+rev.toFixed(2)+'</b> הכנסה</div>';
+  }else{
+    h+='<div class="card" style="padding:8px 12px;margin-top:8px;color:#7a6e55;font-size:12px;">אין ביקורים החודש. לחץ על יום להוספה.</div>';
+  }
+  return h;
+}
+function prevM(){if(UI.mo===0){UI.mo=11;UI.yr--;}else UI.mo--;render();}
+function nextM(){if(UI.mo===11){UI.mo=0;UI.yr++;}else UI.mo++;render();}
+function goDay(ds){UI.day=ds;go('day');}
+
+// ── DAY SHEET ──
+function rDay(){
+  let h='';
+  h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;">';
+  h+='<div style="font-size:18px;font-weight:700;color:#2e5228;">📋 יומן יומי</div>';
+  h+='<input type="date" value="'+UI.day+'" onchange="UI.day=this.value;render();" style="width:158px;">';
+  h+='<div style="font-size:12px;color:#7a6e55;">'+fdate(UI.day)+'</div></div>';
+  const vs=S.visits[UI.day]||[];
+  if(!vs.length)h+='<div class="card" style="padding:20px;text-align:center;color:#7a6e55;"><div style="font-size:26px;margin-bottom:5px;">🌱</div>אין ביקורים ביום זה.</div>';
+  vs.forEach(v=>{h+=rVisit(v,UI.day);});
+  // add visit panel
+  h+='<div class="card" style="padding:10px 13px;border:2px dashed #b8d4b0;margin-top:4px;">';
+  h+='<div class="lbl">הוסף ביקור לקוח</div>';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">';
+  if(!S.customers.length)h+='<div style="font-size:12px;color:#7a6e55;">אין לקוחות עדיין.</div>';
+  else S.customers.forEach(c=>{h+='<button class="btn bo bsm" onclick="addV(\''+UI.day+'\','+c.id+')">+ '+e(c.name)+'</button>';});
+  h+='</div>';
+  if(!UI.addCust){
+    h+='<button class="btn bs bsm" onclick="UI.addCust=true;render();">👤 הוסף לקוח חדש</button>';
+  }else{
+    h+='<div class="ic">';
+    h+='<div style="font-size:12px;font-weight:700;color:#2e5228;margin-bottom:6px;">לקוח חדש</div>';
+    h+='<div class="two">';
+    h+='<div><span class="lbl">שם *</span><input type="text" id="ncn" placeholder="שם"></div>';
+    h+='<div><span class="lbl">כתובת</span><input type="text" id="nca" placeholder="כתובת"></div>';
+    h+='<div><span class="lbl">טלפון</span><input type="text" id="ncp" placeholder="טלפון"></div>';
+    h+='</div>';
+    h+='<div style="display:flex;gap:6px;"><button class="btn bg bsm" onclick="addCI()">הוסף</button>';
+    h+='<button class="btn bo bsm" onclick="UI.addCust=false;render();">ביטול</button></div></div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function rVisit(v,ds){
+  const c=S.customers.find(c=>c.id===v.custId);
+  const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+  const f2v=f2*1.18;
+  const it=(v.items||[]).reduce((s,i)=>s+(i.qty||0)*(parseFloat(i.price)||0),0);
+  const tot=f1+f2v+it;
+  let h='<div class="card vc">';
+  h+='<div class="vh">';
+  h+='<div><div style="font-size:14px;font-weight:700;color:#2e5228;">🏡 '+e(c?c.name:'לקוח לא ידוע')+'</div>';
+  h+='<div style="font-size:11px;color:#7a6e55;margin-top:1px;">📍 '+e(c?c.address:'')+'</div></div>';
+  h+='<button class="btn br bxs" onclick="delV(\''+ds+'\',\''+v.id+'\')">הסר</button></div>';
+  // notes
+  h+='<div style="margin-bottom:9px;"><span class="lbl">הערות עבודה</span>';
+  h+='<textarea rows="2" placeholder="תאר את העבודה שבוצעה..." onchange="upNotes(\''+ds+'\',\''+v.id+'\',this.value)">'+e(v.notes||'')+'</textarea></div>';
+  // fees
+  h+='<div class="fr">';
+  h+='<div class="fb"><span class="lbl">עלות ביקור 1 (₪)</span>';
+  h+='<input type="number" min="0" step="1" placeholder="הכנס עלות..." value="'+e(v.fee===''||v.fee===undefined?'':v.fee)+'" onchange="upFee(\''+ds+'\',\''+v.id+'\',\'fee\',this.value)"></div>';
+  h+='<div class="fb"><span class="lbl">עלות ביקור 2 + מע״מ (₪)</span>';
+  h+='<input type="number" min="0" step="1" placeholder="הכנס עלות..." value="'+e(v.fee2===''||v.fee2===undefined?'':v.fee2)+'" onchange="upFee(\''+ds+'\',\''+v.id+'\',\'fee2\',this.value)">';
+  if(f2>0)h+='<div style="font-size:11px;color:#7a6e55;margin-top:2px;">+ 18% מע״מ = ₪'+f2v.toFixed(2)+'</div>';
+  h+='</div>';
+  h+='<div style="font-size:10px;color:#7a6e55;align-self:flex-end;padding-bottom:4px;">💡 עלות 1 נשמרת ללקוח</div>';
+  h+='</div>';
+  // items
+  h+='<div style="margin-bottom:9px;"><span class="lbl">פריטים שנוספו</span>';
+  (v.items||[]).forEach(item=>{h+=rItem(item,ds,v.id);});
+  h+='<button class="btn bs bsm" style="margin-top:4px;" onclick="addI(\''+ds+'\',\''+v.id+'\')">+ הוסף פריט</button></div>';
+  // subtotal
+  h+='<div class="sub">';
+  if(f1>0)h+='<div class="sr"><span>עלות ביקור 1</span><span>₪'+f1.toFixed(2)+'</span></div>';
+  if(f2>0)h+='<div class="sr"><span>עלות ביקור 2 + מע״מ</span><span>₪'+f2v.toFixed(2)+'</span></div>';
+  if(it>0)h+='<div class="sr"><span>פריטים</span><span>₪'+it.toFixed(2)+'</span></div>';
+  h+='<div class="st"><span>סה״כ</span><span>₪'+tot.toFixed(2)+'</span></div>';
+  h+='</div></div>';
+  return h;
+}
+
+function rItem(item,ds,vid){
+  let h='<div class="ir">';
+  h+='<div class="ig">';
+  // category
+  let cats='';
+  CT.forEach(c=>{cats+='<option'+(c===item.cat?' selected':'')+'>'+e(c)+'</option>';});
+  h+='<select onchange="upCat(\''+ds+'\',\''+vid+'\',\''+item.id+'\',this.value)">'+cats+'</select>';
+  // name
+  if(item.cat==='צמחים'){
+    h+='<div class="acw">';
+    h+='<input type="text" class="pi" placeholder="שם הצמח..." value="'+e(item.name)+'" data-ds="'+ds+'" data-vid="'+vid+'" data-iid="'+item.id+'">';
+    h+='<div class="sug" id="sg-'+item.id+'"></div></div>';
+  }else if(item.cat==='דשן'){
+    let fo='<option value="">בחר סוג דשן...</option>';
+    FR.forEach(o=>{fo+='<option'+(o===item.name?' selected':'')+'>'+e(o)+'</option>';});
+    h+='<select onchange="upIF(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'name\',this.value)">'+fo+'</select>';
+  }else{
+    const ph=item.cat==='ריסוס'?'סוג ריסוס...':'תיאור...';
+    h+='<input type="text" placeholder="'+ph+'" value="'+e(item.name)+'" onchange="upIF(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'name\',this.value)">';
+  }
+  h+='<input type="number" min="1" value="'+item.qty+'" style="text-align:center;" onchange="upIF(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'qty\',this.value)">';
+  h+='<input type="number" min="0" step="0.01" value="'+e(item.price)+'" placeholder="₪" onchange="upIF(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'price\',this.value)">';
+  h+='<button onclick="delI(\''+ds+'\',\''+vid+'\',\''+item.id+'\')" style="background:none;border:none;cursor:pointer;color:#b5673d;font-size:15px;padding:0;">✕</button>';
+  h+='</div>';
+  if(item.cat==='צמחים'){
+    let so='';
+    PS.forEach(s=>{so+='<option'+(s===item.size?' selected':'')+'>'+e(s)+'</option>';});
+    h+='<div style="display:flex;gap:5px;align-items:center;margin-top:5px;">';
+    h+='<span style="font-size:10px;color:#7a6e55;font-weight:700;">גודל:</span>';
+    h+='<select style="width:108px;font-size:11px;" onchange="upIF(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'size\',this.value)">'+so+'</select></div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+// ── MONTH VIEW ──
+function rMon(){
+  let h='';
+  h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+  h+='<button class="btn bo bsm" onclick="prevM()">← הקודם</button>';
+  h+='<div style="font-size:17px;font-weight:700;color:#2e5228;">'+MN[UI.mo]+' '+UI.yr+' — סיכום</div>';
+  h+='<button class="btn bo bsm" onclick="nextM()">הבא →</button></div>';
+  const allV=vim(UI.yr,UI.mo);
+  const byC=S.customers.map(c=>({c,vs:allV.filter(v=>v.custId===c.id)})).filter(x=>x.vs.length>0).map(x=>({...x,tot:x.vs.reduce((s,v)=>s+vt(v),0)}));
+  const gr=byC.reduce((s,x)=>s+x.tot,0);
+  if(!byC.length){h+='<div class="card" style="padding:20px;text-align:center;color:#7a6e55;"><div style="font-size:28px;margin-bottom:5px;">📊</div>אין ביקורים החודש.</div>';return h;}
+  byC.forEach(({c,vs,tot})=>{
+    h+='<div class="card" style="margin-bottom:10px;padding:12px 15px;">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">';
+    h+='<div><div style="font-size:14px;font-weight:700;color:#2e5228;">'+e(c.name)+'</div>';
+    h+='<div style="font-size:11px;color:#7a6e55;">'+vs.length+' ביקורים</div></div>';
+    h+='<div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">';
+    h+='<div style="font-weight:700;font-size:15px;color:#3a6b35;">₪'+tot.toFixed(2)+'</div>';
+    h+='<button class="btn bg bsm" onclick="showBill('+c.id+','+UI.yr+','+UI.mo+')">📄 חשבונית</button>';
+    h+='<button class="btn bw bsm" onclick="custWA('+c.id+','+UI.yr+','+UI.mo+')">💬 וואטסאפ</button>';
+    h+='</div></div>';
+    h+='<table class="bt"><thead><tr><th>תאריך</th><th>עלות 1</th><th>עלות 2+מע״מ</th><th>פריטים</th><th>סה״כ</th></tr></thead><tbody>';
+    vs.forEach(v=>{
+      const[,mm,dd]=v.date.split('-').map(Number);
+      const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+      const il=v.items&&v.items.length?v.items.map(i=>e(i.name)+'('+i.qty+')').join(', '):'—';
+      h+='<tr><td>'+dd+'/'+mm+'</td><td>'+(f1?'₪'+f1.toFixed(2):'—')+'</td><td>'+(f2?'₪'+(f2*1.18).toFixed(2):'—')+'</td><td style="font-size:11px;">'+il+'</td><td style="font-weight:700;">₪'+vt(v).toFixed(2)+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  });
+  h+='<div class="card" style="padding:12px 15px;background:#eef6eb;border:2px solid #3a6b35;">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;">';
+  h+='<div><div style="font-size:12px;color:#5a5040;"><b>'+allV.length+'</b> ביקורים · <b>'+byC.length+'</b> לקוחות</div>';
+  h+='<div style="font-weight:700;font-size:18px;color:#2e5228;">סה״כ חודשי: ₪'+gr.toFixed(2)+'</div></div>';
+  h+='<div style="display:flex;gap:7px;flex-wrap:wrap;">';
+  h+='<button class="btn bg" onclick="copyAll()">📋 העתק את כל החשבוניות</button>';
+  h+='<button class="btn bw" onclick="sendAll()">💬 שלח הכל לוואטסאפ</button>';
+  h+='</div></div></div>';
+  return h;
+}
+
+// ── CUSTOMERS ──
+function rCust(){
+  let h='';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">';
+  h+='<div style="font-size:18px;font-weight:700;color:#2e5228;">לקוחות</div>';
+  h+='<button class="btn bg" onclick="UI.modal=\'ac\';render();">+ הוסף לקוח</button></div>';
+  if(!S.customers.length){h+='<div class="card" style="padding:20px;text-align:center;color:#7a6e55;">אין לקוחות עדיין.</div>';return h;}
+  S.customers.forEach(c=>{
+    const av=Object.values(S.visits).flat().filter(v=>v.custId===c.id);
+    const rev=av.reduce((s,v)=>s+vt(v),0);
+    h+='<div class="card" style="padding:11px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;">';
+    h+='<div><div style="font-size:13px;font-weight:700;color:#2e5228;">'+e(c.name)+'</div>';
+    h+='<div style="font-size:11px;color:#7a6e55;margin-top:1px;">📍 '+e(c.address)+' · 📞 '+e(c.phone)+'</div></div>';
+    h+='<div style="display:flex;align-items:center;gap:9px;">';
+    h+='<div style="text-align:right;font-size:12px;"><div style="color:#7a6e55;">'+av.length+' ביקורים</div>';
+    h+='<div style="color:#3a6b35;font-weight:700;font-size:13px;">₪'+rev.toFixed(2)+'</div></div>';
+    h+='<button class="btn br bxs" onclick="if(confirm(\'למחוק לקוח זה?\'))delC('+c.id+')">הסר</button>';
+    h+='</div></div>';
+  });
+  return h;
+}
+
+// ── MODALS ──
+function rm(){
+  if(UI.modal==='ac')return rAddCust();
+  if(UI.modal==='bill')return rBill();
+  return '';
+}
+function rAddCust(){
+  return '<div class="ov" onclick="if(event.target===this){UI.modal=null;render();}">'+
+    '<div class="modal" style="max-width:380px;">'+
+    '<div style="font-size:16px;font-weight:700;color:#2e5228;margin-bottom:13px;">לקוח חדש</div>'+
+    '<div style="margin-bottom:9px;"><span class="lbl">שם *</span><input type="text" id="ncn" placeholder="שם"></div>'+
+    '<div style="margin-bottom:9px;"><span class="lbl">כתובת</span><input type="text" id="nca" placeholder="כתובת"></div>'+
+    '<div style="margin-bottom:9px;"><span class="lbl">טלפון</span><input type="text" id="ncp" placeholder="טלפון"></div>'+
+    '<div style="display:flex;gap:8px;margin-top:13px;">'+
+    '<button class="btn bg" onclick="addCM()">הוסף לקוח</button>'+
+    '<button class="btn bo" onclick="UI.modal=null;render();">ביטול</button></div></div></div>';
+}
+function rBill(){
+  const b=UI.billData;if(!b)return '';
+  const {cust,visits,total,month,year}=b;
+  let h='<div class="ov" onclick="if(event.target===this){UI.modal=null;render();}">';
+  h+='<div class="modal">';
+  h+='<div class="np" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;flex-wrap:wrap;gap:6px;">';
+  h+='<div style="font-size:15px;font-weight:700;color:#2e5228;">תצוגת חשבונית</div>';
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+  h+='<button class="btn bg bsm" onclick="window.print()">🖨 הדפסה</button>';
+  h+='<button class="btn bsm" style="background:#5a8a7a;color:#fff;" onclick="copyBill()">📋 העתק</button>';
+  h+='<button class="btn bw bsm" onclick="billWA()">💬 וואטסאפ</button>';
+  h+='<button class="btn bo bsm" onclick="UI.modal=null;render();">סגור</button>';
+  h+='</div></div>';
+  h+='<div style="background:#fff;border:1px solid #d0c8b0;border-radius:9px;padding:18px 20px;">';
+  h+='<div style="display:flex;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px;">';
+  h+='<div><div style="font-size:18px;font-weight:700;color:#2e5228;">🌿 יומן מתן רביד גינון והשקיה</div>';
+  h+='<div style="font-size:11px;color:#7a6e55;margin-top:2px;">שירותי גינון מקצועיים</div></div>';
+  h+='<div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:#b5673d;">חשבונית</div>';
+  h+='<div style="font-size:11px;color:#7a6e55;">תקופה: '+month+' '+year+'</div>';
+  h+='<div style="font-size:11px;color:#7a6e55;">תאריך: '+new Date().toLocaleDateString('he-IL')+'</div></div></div>';
+  h+='<div style="background:#f5f0e8;border-radius:7px;padding:9px 12px;margin-bottom:13px;">';
+  h+='<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:#7a6e55;margin-bottom:3px;">לכבוד</div>';
+  h+='<div style="font-weight:700;font-size:13px;">'+e(cust.name)+'</div>';
+  h+='<div style="font-size:11px;color:#5a5040;">'+e(cust.address)+'</div>';
+  h+='<div style="font-size:11px;color:#5a5040;">'+e(cust.phone)+'</div></div>';
+  h+='<table class="bt" style="margin-bottom:13px;"><thead><tr><th>תאריך</th><th>תיאור</th><th>סכום</th></tr></thead><tbody>';
+  visits.forEach(v=>{
+    const[,mm,dd]=v.date.split('-').map(Number);
+    const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+    h+='<tr><td style="white-space:nowrap;">'+dd+'/'+mm+'/'+year+'</td><td>';
+    if(v.notes)h+='<div style="font-style:italic;color:#5a5040;margin-bottom:2px;">'+e(v.notes)+'</div>';
+    if(f1>0)h+='<div>עלות ביקור 1: ₪'+f1.toFixed(2)+'</div>';
+    if(f2>0)h+='<div>עלות ביקור 2 + מע״מ 18%: ₪'+(f2*1.18).toFixed(2)+'</div>';
+    (v.items||[]).forEach(it=>{h+='<div style="color:#5a5040;">• '+e(it.name)+(it.size&&it.cat==='צמחים'?' ('+e(it.size)+')':'')+' × '+it.qty+' @ ₪'+(parseFloat(it.price)||0)+'</div>';});
+    h+='</td><td style="font-weight:600;text-align:left;">₪'+vt(v).toFixed(2)+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  h+='<div style="display:flex;justify-content:flex-end;"><div style="min-width:185px;">';
+  h+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid #d0c8b0;font-size:14px;font-weight:700;color:#2e5228;">';
+  h+='<span>סה״כ לתשלום</span><span>₪'+total.toFixed(2)+'</span></div></div></div>';
+  h+='<div style="margin-top:18px;padding-top:11px;border-top:1px dashed #d0c8b0;font-size:11px;color:#7a6e55;text-align:center;">תודה על אמונך! התשלום נדרש תוך 14 יום. 🌿</div>';
+  h+='</div></div></div>';
+  return h;
+}
+
+// ── ACTIONS ──
+function addV(ds,cid){
+  const c=S.customers.find(c=>c.id===cid);
+  const v={id:Date.now()+'_'+Math.random().toString(36).slice(2),custId:cid,fee:c&&c.defaultFee!==undefined?c.defaultFee:'',fee2:'',notes:'',items:[]};
+  if(!S.visits[ds])S.visits[ds]=[];
+  S.visits[ds].push(v);save();render();toast('ביקור נוסף ✓');
+}
+function delV(ds,vid){S.visits[ds]=(S.visits[ds]||[]).filter(v=>v.id!==vid);save();render();toast('ביקור הוסר');}
+function upNotes(ds,vid,val){const v=fv(ds,vid);if(v){v.notes=val;save();}}
+function upFee(ds,vid,key,val){
+  const v=fv(ds,vid);if(!v)return;
+  v[key]=val===''?'':parseFloat(val);
+  if(key==='fee'){const c=S.customers.find(c=>c.id===v.custId);if(c)c.defaultFee=v.fee;}
+  save();render();
+}
+function addI(ds,vid){const v=fv(ds,vid);if(!v)return;if(!v.items)v.items=[];v.items.push(ni());save();render();}
+function delI(ds,vid,iid){const v=fv(ds,vid);if(!v)return;v.items=v.items.filter(i=>i.id!==iid);save();render();}
+function upCat(ds,vid,iid,val){const i=fi(ds,vid,iid);if(!i)return;i.cat=val;i.name='';i.size='כוסית';save();render();}
+function upIF(ds,vid,iid,field,val){
+  const i=fi(ds,vid,iid);if(!i)return;
+  if(field==='qty')i.qty=parseInt(val)||1;
+  else if(field==='price'){i.price=val;spPlant(i.name,val);}
+  else i[field]=val;
+  save();render();
+}
+function spPlant(name,price){
+  if(!name||!name.trim())return;
+  name=name.trim();
+  const ex=S.savedPlants.find(p=>p.name===name);
+  if(ex)ex.price=price;else S.savedPlants.push({name,price});
+  save();
+}
+function addCM(){
+  const n=(document.getElementById('ncn')||{}).value||'';
+  const a=(document.getElementById('nca')||{}).value||'';
+  const p=(document.getElementById('ncp')||{}).value||'';
+  if(!n.trim()){toast('נא להזין שם');return;}
+  S.customers.push({id:S.nextId++,name:n.trim(),address:a.trim(),phone:p.trim(),defaultFee:''});
+  save();UI.modal=null;render();toast('לקוח נוסף ✓');
+}
+function addCI(){
+  const n=(document.getElementById('ncn')||{}).value||'';
+  const a=(document.getElementById('nca')||{}).value||'';
+  const p=(document.getElementById('ncp')||{}).value||'';
+  if(!n.trim()){toast('נא להזין שם');return;}
+  S.customers.push({id:S.nextId++,name:n.trim(),address:a.trim(),phone:p.trim(),defaultFee:''});
+  save();UI.addCust=false;render();toast('לקוח נוסף ✓');
+}
+function delC(id){S.customers=S.customers.filter(c=>c.id!==id);save();render();toast('לקוח הוסר');}
+
+// ── BILLING ──
+function showBill(cid,yr,mo){
+  const cust=S.customers.find(c=>c.id===cid);
+  const vs=vim(yr,mo).filter(v=>v.custId===cid).sort((a,b)=>a.date.localeCompare(b.date));
+  UI.billData={cust,visits:vs,total:vs.reduce((s,v)=>s+vt(v),0),month:MN[mo],year:yr};
+  UI.modal='bill';render();
+}
+function bText(){
+  const {cust,visits,total,month,year}=UI.billData;
+  const L=['חשבונית שירות גינון — '+month+' '+year,'לקוח: '+cust.name,'כתובת: '+cust.address,'─'.repeat(28)];
+  visits.forEach(v=>{
+    const[,mm,dd]=v.date.split('-').map(Number);
+    const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+    L.push('📅 '+dd+'/'+mm+': ₪'+vt(v).toFixed(2));
+    if(v.notes)L.push('   '+v.notes);
+    if(f1>0)L.push('   עלות ביקור 1: ₪'+f1.toFixed(2));
+    if(f2>0)L.push('   עלות ביקור 2 + מע"מ 18%: ₪'+(f2*1.18).toFixed(2));
+    (v.items||[]).forEach(i=>L.push('   • '+i.name+(i.size&&i.cat==='צמחים'?' ('+i.size+')':'')+' x'+i.qty+' @ ₪'+(parseFloat(i.price)||0)));
+  });
+  L.push('─'.repeat(28),'סה"כ לתשלום: ₪'+total.toFixed(2),'','תודה רבה! 🌿');
+  return L.join('\n');
+}
+function copyBill(){navigator.clipboard.writeText(bText()).then(()=>toast('הועתק ✓')).catch(()=>toast('שגיאה'));}
+function billWA(){window.open('https://wa.me/?text='+encodeURIComponent(bText()),'_blank');}
+
+function allTxt(){
+  const allV=vim(UI.yr,UI.mo);
+  const byC=S.customers.map(c=>({c,vs:allV.filter(v=>v.custId===c.id)})).filter(x=>x.vs.length>0).map(x=>({...x,tot:x.vs.reduce((s,v)=>s+vt(v),0)}));
+  const gr=byC.reduce((s,x)=>s+x.tot,0);
+  const L=['סיכום חודשי — '+MN[UI.mo]+' '+UI.yr,'═'.repeat(30)];
+  byC.forEach(({c,vs,tot})=>{
+    L.push('','🏡 '+c.name);
+    vs.forEach(v=>{
+      const[,mm,dd]=v.date.split('-').map(Number);
+      L.push('  • '+dd+'/'+mm+': ₪'+vt(v).toFixed(2));
+      if(v.notes)L.push('    '+v.notes);
+      (v.items||[]).forEach(i=>L.push('    - '+i.name+(i.size&&i.cat==='צמחים'?' ('+i.size+')':'')+' x'+i.qty));
+    });
+    L.push('  סה"כ: ₪'+tot.toFixed(2));
+  });
+  L.push('','═'.repeat(30),'סה"כ כולל: ₪'+gr.toFixed(2),byC.length+' לקוחות · '+allV.length+' ביקורים');
+  return L.join('\n');
+}
+function copyAll(){navigator.clipboard.writeText(allTxt()).then(()=>toast('הועתק ✓')).catch(()=>toast('שגיאה'));}
+function sendAll(){window.open('https://wa.me/?text='+encodeURIComponent(allTxt()),'_blank');}
+function custWA(cid,yr,mo){
+  const cust=S.customers.find(c=>c.id===cid);
+  const vs=vim(yr,mo).filter(v=>v.custId===cid).sort((a,b)=>a.date.localeCompare(b.date));
+  const tot=vs.reduce((s,v)=>s+vt(v),0);
+  const L=['שלום '+cust.name+',','','סיכום ביקורים לחודש '+MN[mo]+' '+yr,''];
+  vs.forEach(v=>{
+    const[,mm,dd]=v.date.split('-').map(Number);
+    L.push('📅 '+dd+'/'+mm+': ₪'+vt(v).toFixed(2));
+    if(v.notes)L.push('   '+v.notes);
+    (v.items||[]).forEach(i=>L.push('   • '+i.name+(i.size&&i.cat==='צמחים'?' ('+i.size+')':'')+' x'+i.qty));
+  });
+  L.push('','סה"כ לתשלום: ₪'+tot.toFixed(2),'','תודה רבה! 🌿');
+  window.open('https://wa.me/?text='+encodeURIComponent(L.join('\n')),'_blank');
+}
+
+// ── AUTOCOMPLETE ──
+function setupAC(){
+  document.querySelectorAll('.pi').forEach(inp=>{
+    inp.addEventListener('input',function(){
+      const val=this.value,iid=this.dataset.iid;
+      const sg=document.getElementById('sg-'+iid);
+      if(!sg)return;
+      const m=S.savedPlants.filter(p=>p.name.includes(val)&&val.length>0&&p.name!==val);
+      if(!m.length){sg.classList.remove('show');return;}
+      sg.innerHTML=m.map(p=>'<div class="si" data-n="'+e(p.name)+'" data-p="'+e(p.price||'')+'">'+e(p.name)+(p.price?' — ₪'+p.price:'')+'</div>').join('');
+      sg.querySelectorAll('.si').forEach(el=>{
+        el.addEventListener('mousedown',function(ev){
+          ev.preventDefault();
+          const ds=inp.dataset.ds,vid=inp.dataset.vid,iid2=inp.dataset.iid;
+          const it=fi(ds,vid,iid2);
+          if(it){it.name=this.dataset.n;it.price=this.dataset.p||it.price;save();render();}
+        });
+      });
+      sg.classList.add('show');
+    });
+    inp.addEventListener('blur',function(){
+      setTimeout(()=>{
+        const sg=document.getElementById('sg-'+this.dataset.iid);
+        if(sg)sg.classList.remove('show');
+        const it=fi(this.dataset.ds,this.dataset.vid,this.dataset.iid);
+        if(it&&this.value!==it.name){it.name=this.value;spPlant(this.value,it.price);save();}
+      },150);
+    });
+  });
+}
+
+// ── BACKUP ──
+function exportD(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='gardener-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  toast('גיבוי הורד ✓');
+}
+function importD(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p&&Array.isArray(p.customers)){S=p;save();render();toast('נתונים שוחזרו ✓');}else toast('קובץ לא תקין');}catch{toast('שגיאה בקריאת הקובץ');}};
+  r.readAsText(file);ev.target.value='';
+}
+
+// ── SAVE STATUS ──
+function showSaveStatus(){
+  let el=document.getElementById('save-status');
+  if(!el)return;
+  const count=S.customers.length;
+  const visits=Object.values(S.visits).flat().length;
+  el.textContent='✓ נשמר | '+count+' לקוחות | '+visits+' ביקורים';
+  el.style.color='#3a6b35';
+}
+
+
+// ── INSTALL PWA ──
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+window.addEventListener('appinstalled', function() {
+  document.getElementById('install-banner').classList.remove('show');
+  toast('האפליקציה הותקנה! ✓');
+});
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.then(() => { deferredPrompt = null; });
+    document.getElementById('install-banner').classList.remove('show');
+  } else {
+    // iOS Safari instructions
+    toast('Safari: שתף ← "הוסף למסך הבית"');
+  }
+}
+
+// ── INIT ──
+loadS();
+render();
+window.addEventListener('beforeunload', function() { save(); });
+setInterval(function() { save(); }, 10000);
+
+// ── LUCIDE ICONS (after DOM ready) ──
+if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+</script>
+</body>
+</html>
