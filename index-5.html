@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="גינון רביד">
+<meta name="theme-color" content="#3a6b35">
+<title>יומן מתן רביד גינון והשקיה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#3a6b35;--gd:#2e5228;--gl:#7a9e72;--gbg:#eef6eb;--cream:#fffdf7;--sand:#f5f0e8;--bdr:#d9d0b8;--mut:#7a6e55;--red:#b5673d;--rbg:#f5e8e0;--wa:#25D366;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Heebo',Arial,sans-serif;background:var(--sand);color:#2c2c1e;min-height:100vh;}
+/* buttons */
+.btn{display:inline-flex;align-items:center;cursor:pointer;border:none;border-radius:7px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:700;transition:all .15s;white-space:nowrap;gap:4px;}
+.bg{background:var(--g);color:#fff;} .bg:hover{background:var(--gd);}
+.bs{background:var(--gl);color:#fff;} .bs:hover{background:#5e7e56;}
+.bo{background:transparent;color:var(--g);border:1.5px solid var(--g);} .bo:hover{background:var(--g);color:#fff;}
+.br{background:var(--rbg);color:var(--red);border:1px solid #e0c8b8;}
+.bw{background:var(--wa);color:#fff;} .bw:hover{background:#1da851;}
+.bsm{padding:5px 10px;font-size:12px;} .bxs{padding:3px 8px;font-size:11px;border-radius:5px;}
+/* card & inputs */
+.card{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 2px 8px rgba(60,50,20,.08);}
+input,textarea,select{font-family:inherit;border:1.5px solid #c9c0a0;border-radius:7px;padding:8px 10px;font-size:16px;background:#fff;color:#2c2c1e;width:100%;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--g);}
+textarea{resize:vertical;}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:5px;}
+/* header */
+#hdr{background:linear-gradient(135deg,#2e5228,#3a6b35,#4a8040);padding:14px 16px 0;box-shadow:0 4px 20px rgba(30,50,20,.25);position:sticky;top:0;z-index:40;}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.logo-t{color:#fff;font-size:15px;font-weight:800;line-height:1.2;}
+.logo-s{color:#a8d4a0;font-size:10px;margin-top:1px;}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;cursor:pointer;padding:9px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:12px;border:none;background:transparent;color:rgba(255,255,255,.7);font-family:inherit;}
+.tab.on{background:rgba(0,0,0,.25);color:#fff;}
+.tab:hover:not(.on){background:rgba(255,255,255,.15);color:#fff;}
+/* main */
+#main{padding:14px;max-width:860px;margin:0 auto;}
+/* calendar */
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.chdr{text-align:center;font-size:10px;font-weight:700;color:var(--mut);padding:3px 0;}
+.dc{cursor:pointer;border-radius:7px;padding:4px 3px;min-height:66px;border:1.5px solid transparent;background:var(--cream);overflow:hidden;}
+.dc:hover{background:#e8f0e4;border-color:#a8c89e;}
+.dc.tod{border-color:var(--g)!important;background:var(--gbg);}
+.dc.hag{border-color:#e8b4b4;background:#fdf0f0;}
+.dc.chof{border-color:#b4cce8;background:#eaf4fb;}
+.dc.zik{border-color:#c8c8c8;background:#f2f3f4;}
+.dc.vist{background:#f0f5ee;}
+.dc-num{font-size:12px;font-weight:500;margin-bottom:2px;}
+.dc-hol{font-size:7px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:1px;}
+.dc-nam{font-size:7px;background:var(--g);color:#fff;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+/* visit */
+.vc{margin-bottom:13px;padding:14px 15px;}
+.fr{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;}
+.fb{min-width:125px;flex:1;}
+/* item */
+.ir{background:#f8f5ef;border-radius:7px;padding:8px;margin-bottom:6px;border:1px solid #e0d8c0;}
+.ig{display:grid;grid-template-columns:84px 1fr 46px 62px 24px;gap:5px;align-items:center;}
+.ig input,.ig select{font-size:13px;padding:6px 7px;}
+/* autocomplete */
+.acw{position:relative;}
+.sug{position:absolute;top:100%;right:0;left:0;background:#fff;border:1.5px solid var(--g);border-top:none;border-radius:0 0 7px 7px;z-index:50;max-height:120px;overflow-y:auto;display:none;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.sug.open{display:block;}
+.si{padding:7px 10px;cursor:pointer;font-size:13px;} .si:hover{background:var(--gbg);}
+/* subtotal */
+.sub{border-top:2px solid var(--bdr);padding-top:9px;margin-top:6px;}
+.sr{display:flex;justify-content:space-between;font-size:13px;color:#5a5040;margin-bottom:3px;max-width:240px;}
+.st{display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:var(--g);border-top:1px solid #c0b898;padding-top:4px;margin-top:2px;max-width:240px;}
+/* tables */
+.bt{width:100%;border-collapse:collapse;font-size:12px;}
+.bt th{background:var(--g);color:#fff;padding:7px 9px;text-align:right;font-weight:700;}
+.bt td{padding:5px 9px;border-bottom:1px solid #e0d8c0;vertical-align:top;}
+.bt tr:last-child td{border-bottom:none;}
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(10,10,5,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px;}
+.modal{background:var(--cream);border-radius:14px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px;}
+/* toast */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:9px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;display:none;}
+/* misc */
+.ic{background:#f0f5ee;border-radius:8px;padding:11px;margin-top:7px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+#bbar{border-top:1px solid var(--bdr);padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;background:var(--cream);}
+.stat-g{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+@media(min-width:480px){.stat-g{grid-template-columns:repeat(4,1fr);}}
+.stat-c{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;padding:13px 15px;}
+.stat-n{font-size:21px;font-weight:800;color:var(--g);}
+.stat-l{font-size:11px;color:var(--mut);margin-top:2px;font-weight:600;}
+.stat-s{font-size:11px;color:var(--mut);margin-top:2px;}
+.chart-w{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:14px;}
+.chart-t{font-size:13px;font-weight:700;margin-bottom:10px;}
+.walkin-tag{font-size:10px;background:#e8d8f0;color:#6a3d8f;border-radius:4px;padding:1px 5px;margin-right:4px;}
+@media print{#hdr,.tab,#bbar,.np{display:none!important;}}
+@media(max-width:480px){
+  .logo-t{font-size:13px;} #main{padding:10px;} .modal{padding:15px;}
+  .ig{grid-template-columns:76px 1fr 42px 54px 20px;gap:3px;} .ig input,.ig select{font-size:12px;padding:5px 6px;}
+  .two{grid-template-columns:1fr;} .sr,.st{max-width:100%;} .bt{font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div class="logo">
+    <div style="font-size:26px;">🌿</div>
+    <div>
+      <div class="logo-t">יומן מתן רביד גינון והשקיה</div>
+      <div class="logo-s">עוזר יומי לגנן</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+
+<div id="main"><div style="padding:40px;text-align:center;color:var(--g);">⏳ טוען...</div></div>
+
+<div id="bbar">
+  <span style="font-size:11px;font-weight:700;color:var(--mut);">שמירת נתונים:</span>
+  <button class="btn bo bsm" onclick="exportD()">💾 ייצוא גיבוי</button>
+  <label class="btn bo bsm" style="cursor:pointer;">📂 טעינת גיבוי
+    <input type="file" accept=".json" style="display:none;width:auto;" onchange="importD(event)">
+  </label>
+  <span id="ss" style="font-size:11px;font-weight:700;color:var(--g);"></span>
+</div>
+<div id="mw"></div>
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════
+// DATA & STATE
+// ════════════════════════════════════
+var S = {customers:[], visits:{}, plants:[], nextId:1};
+var V = {tab:'calendar', yr:new Date().getFullYear(), mo:new Date().getMonth(),
+         day:new Date().toISOString().slice(0,10), modal:null, addCust:false,
+         custQ:'', editId:null, billData:null};
+
+var MN = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+var DW = ["א'","ב'","ג'","ד'","ה'","ו'","ש'"];
+var SIZES = ['כוסית','עציץ 12','גודל 4','10 ליטר','25 ליטר','50 ליטר','70 ליטר'];
+var FERT = ['דשן למשאבת דישון','דישון לדשא','דישון לעצים','אחר'];
+var CATS = ['צמחים','דשן','ריסוס','אחר'];
+
+// holidays  h=חג  v=חופשה  m=זיכרון
+var HL = {};
+(function(){
+  var h = [
+    ['2024-10-02','ראש השנה','h'],['2024-10-03',"ב' ר\"ה",'h'],
+    ['2024-10-11','ערב יוה"כ','h'],['2024-10-12','יום כיפור','h'],
+    ['2024-10-16','סוכות','h'],['2024-10-17','סוכות','v'],
+    ['2024-10-18','חוה"מ','v'],['2024-10-19','חוה"מ','v'],['2024-10-20','חוה"מ','v'],['2024-10-21','חוה"מ','v'],
+    ['2024-10-23','שמיני עצרת','h'],['2024-10-24','שמחת תורה','h'],
+    ['2024-12-25','חנוכה','h'],['2024-12-26','חנוכה','v'],['2024-12-27','חנוכה','v'],
+    ['2024-12-28','חנוכה','v'],['2024-12-29','חנוכה','v'],['2024-12-30','חנוכה','v'],
+    ['2024-12-31','חנוכה','v'],['2025-01-01','חנוכה','v'],['2025-01-02','חנוכה','h'],
+    ['2025-02-13','ט"ו בשבט','h'],['2025-03-13','תענית אסתר','h'],['2025-03-14','פורים','h'],
+    ['2025-04-12','ערב פסח','h'],['2025-04-13','פסח','h'],['2025-04-14','פסח','v'],
+    ['2025-04-15','חוה"מ פסח','v'],['2025-04-16','חוה"מ פסח','v'],['2025-04-17','חוה"מ פסח','v'],
+    ['2025-04-18','חוה"מ פסח','v'],['2025-04-19','חוה"מ פסח','v'],['2025-04-20','שביעי פסח','h'],
+    ['2025-04-27','יום השואה','m'],['2025-04-30','יום הזיכרון','m'],['2025-05-01','יום העצמאות','h'],
+    ['2025-05-26','ל"ג בעומר','h'],['2025-06-01','ערב שבועות','h'],
+    ['2025-06-02','שבועות','h'],['2025-06-03','שבועות','v'],['2025-08-12','תשעה באב','h'],
+    ['2025-09-22','ראש השנה','h'],['2025-09-23',"ב' ר\"ה",'h'],['2025-09-24','צום גדליה','h'],
+    ['2025-10-01','ערב יוה"כ','h'],['2025-10-02','יום כיפור','h'],
+    ['2025-10-06','סוכות','h'],['2025-10-07','סוכות','v'],
+    ['2025-10-08','חוה"מ','v'],['2025-10-09','חוה"מ','v'],['2025-10-10','חוה"מ','v'],
+    ['2025-10-11','חוה"מ','v'],['2025-10-12','חוה"מ','v'],
+    ['2025-10-13','שמיני עצרת','h'],['2025-10-14','שמחת תורה','h'],
+    ['2025-12-14','חנוכה','h'],['2025-12-15','חנוכה','v'],['2025-12-16','חנוכה','v'],
+    ['2025-12-17','חנוכה','v'],['2025-12-18','חנוכה','v'],['2025-12-19','חנוכה','v'],
+    ['2025-12-20','חנוכה','v'],['2025-12-21','חנוכה','v'],['2025-12-22','חנוכה','h'],
+    ['2026-02-01','ט"ו בשבט','h'],['2026-03-02','פורים','h'],['2026-03-03','שושן פורים','h'],
+    ['2026-03-29','ערב פסח','h'],['2026-03-30','פסח','h'],['2026-03-31','פסח','v'],
+    ['2026-04-01','חוה"מ פסח','v'],['2026-04-02','חוה"מ פסח','v'],['2026-04-03','חוה"מ פסח','v'],
+    ['2026-04-04','חוה"מ פסח','v'],['2026-04-05','חוה"מ פסח','v'],['2026-04-06','שביעי פסח','h'],
+    ['2026-04-16','יום השואה','m'],['2026-04-22','יום הזיכרון','m'],['2026-04-23','יום העצמאות','h'],
+    ['2026-05-14','ל"ג בעומר','h'],['2026-05-21','ערב שבועות','h'],
+    ['2026-05-22','שבועות','h'],['2026-05-23','שבועות','v'],['2026-07-23','תשעה באב','h']
+  ];
+  h.forEach(function(x){HL[x[0]]=[x[1],x[2]];});
+  // summer
+  for(var d=1;d<=31;d++){
+    var p='0'+d; p=p.slice(-2);
+    HL['2025-07-'+p]=['חופש קיץ','v'];
+    if(d!==12)HL['2025-08-'+p]=['חופש קיץ','v'];
+    HL['2026-07-'+p]=['חופש קיץ','v'];
+    HL['2026-08-'+p]=['חופש קיץ','v'];
+  }
+})();
+
+// ════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════
+var SK = 'gardener_MASTER';
+function save(){
+  try{var j=JSON.stringify(S);localStorage.setItem(SK,j);localStorage.setItem(SK+'_bak',j);}
+  catch(e){console.error('save error',e);}
+}
+function loadData(){
+  var keys=[SK,SK+'_bak','gardener_v4','gardener_v4_bak','gardener_v3','gardener_v3_bak'];
+  for(var i=0;i<keys.length;i++){
+    try{
+      var r=localStorage.getItem(keys[i]);
+      if(r){var p=JSON.parse(r);if(p&&Array.isArray(p.customers)){S=p;if(!S.plants)S.plants=[];save();return;}}
+    }catch(e){}
+  }
+}
+function exportD(){
+  var b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  var u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='ginnun-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+  toast('גיבוי הורד ✓');
+}
+function importD(ev){
+  var f=ev.target.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(e){
+    try{var p=JSON.parse(e.target.result);if(p&&Array.isArray(p.customers)){S=p;if(!S.plants)S.plants=[];save();render();toast('נתונים שוחזרו ✓');}else toast('קובץ לא תקין');}
+    catch(ex){toast('שגיאה בקריאת הקובץ');}
+  };
+  rd.readAsText(f);ev.target.value='';
+}
+
+// ════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════
+function x(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dkey(y,m,d){return y+'-'+pad(m+1)+'-'+pad(d);}
+function pad(n){return n<10?'0'+n:String(n);}
+function daysIn(y,m){return new Date(y,m+1,0).getDate();}
+function firstDow(y,m){return new Date(y,m,1).getDay();}
+function fmtDate(s){var a=s.split('-').map(Number);return DW[new Date(a[0],a[1]-1,a[2]).getDay()]+' '+a[2]+' '+MN[a[1]-1]+' '+a[0];}
+function vTotal(v){
+  var f1=parseFloat(v.fee)||0, f2=parseFloat(v.fee2)||0;
+  var items=(v.items||[]).reduce(function(s,it){return s+(it.qty||0)*(parseFloat(it.price)||0);},0);
+  return f1+f2*1.18+items;
+}
+function visitsInMonth(y,m){
+  var mk=y+'-'+pad(m+1);
+  var out=[];
+  Object.keys(S.visits).forEach(function(k){if(k.indexOf(mk)===0)S.visits[k].forEach(function(v){out.push(Object.assign({},v,{date:k}));});});
+  return out;
+}
+function allVisits(){
+  var out=[];
+  Object.keys(S.visits).forEach(function(k){S.visits[k].forEach(function(v){out.push(Object.assign({},v,{date:k}));});});
+  return out;
+}
+function findVisit(ds,vid){return (S.visits[ds]||[]).find(function(v){return v.id===vid;});}
+function findItem(ds,vid,iid){var v=findVisit(ds,vid);return v?(v.items||[]).find(function(i){return i.id===iid;}):null;}
+function getVisitFee(custId){
+  // get fee from last visit
+  var vs=allVisits().filter(function(v){return v.custId===custId;}).sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(vs.length)return {fee:vs[0].fee!==undefined?vs[0].fee:'',fee2:vs[0].fee2!==undefined?vs[0].fee2:''};
+  var c=S.customers.find(function(c){return c.id===custId;});
+  return {fee:c&&c.defaultFee!==undefined?c.defaultFee:'',fee2:''};
+}
+function sortedCusts(q){
+  var cnt={};
+  allVisits().forEach(function(v){if(v.custId)cnt[v.custId]=(cnt[v.custId]||0)+1;});
+  return S.customers
+    .filter(function(c){return !q||c.name.indexOf(q)>=0||c.address.indexOf(q)>=0||c.phone.indexOf(q)>=0;})
+    .sort(function(a,b){return (cnt[b.id]||0)-(cnt[a.id]||0);});
+}
+function newItem(){return {id:Date.now()+'_'+Math.random().toString(36).slice(2),cat:'צמחים',name:'',size:'כוסית',qty:1,price:''};}
+
+// ════════════════════════════════════
+// TOAST & TABS
+// ════════════════════════════════════
+var _tt=null;
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(_tt);_tt=setTimeout(function(){t.style.display='none';},2500);}
+
+function buildTabs(){
+  var bar=document.getElementById('tabs');
+  bar.innerHTML='';
+  var tabs=[['calendar','📅 לוח שנה'],['day','📋 יומן יומי'],['month','📊 חודשי'],['stats','📈 נתונים'],['customers','👤 לקוחות']];
+  tabs.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='tab'+(V.tab===t[0]?' on':'');
+    b.textContent=t[1];
+    b.setAttribute('data-v',t[0]);
+    b.onclick=function(){go(t[0]);};
+    bar.appendChild(b);
+  });
+}
+
+// ════════════════════════════════════
+// RENDER ENGINE
+// ════════════════════════════════════
+function go(tab){V.tab=tab;V.addCust=false;V.custQ='';render();}
+
+function render(){
+  save();
+  var main=document.getElementById('main');
+  var mw=document.getElementById('mw');
+  var ss=document.getElementById('ss');
+  if(!main)return;
+  main.innerHTML = V.tab==='calendar'?rCal():
+                   V.tab==='day'?rDay():
+                   V.tab==='month'?rMonth():
+                   V.tab==='stats'?rStats():
+                   rCustomers();
+  mw.innerHTML = V.modal?rModal():'';
+  buildTabs();
+  if(ss)ss.textContent='✓ נשמר | '+S.customers.length+' לקוחות | '+allVisits().length+' ביקורים';
+  setupAC();
+  if(V.tab==='stats')loadChartsAndDraw();
+}
+
+// ════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════
+function rCal(){
+  var ts=new Date().toISOString().slice(0,10);
+  var h='';
+  h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+  h+='<button class="btn bo bsm" onclick="prevMo()">← הקודם</button>';
+  h+='<b style="font-size:17px;color:var(--g);">'+MN[V.mo]+' '+V.yr+'</b>';
+  h+='<button class="btn bo bsm" onclick="nextMo()">הבא →</button></div>';
+  h+='<div style="display:flex;gap:10px;margin-bottom:8px;font-size:10px;flex-wrap:wrap;">';
+  h+='<span>🔴 חג</span><span>🔵 חופשה</span><span>⚫ זיכרון</span></div>';
+  h+='<div class="card" style="padding:10px;">';
+  h+='<div class="cgrid" style="margin-bottom:3px;">';
+  DW.forEach(function(d){h+='<div class="chdr">'+d+'</div>';});
+  h+='</div><div class="cgrid">';
+  for(var i=0;i<firstDow(V.yr,V.mo);i++)h+='<div></div>';
+  for(var d=1;d<=daysIn(V.yr,V.mo);d++){
+    var ds=dkey(V.yr,V.mo,d);
+    var vs=S.visits[ds]||[];
+    var hd=HL[ds];
+    var isT=ds===ts;
+    var cls='dc';
+    if(isT)cls+=' tod';
+    else if(hd){if(hd[1]==='h')cls+=' hag';else if(hd[1]==='v')cls+=' chof';else cls+=' zik';}
+    else if(vs.length)cls+=' vist';
+    var hc=hd?(hd[1]==='h'?'#c0392b':hd[1]==='v'?'#2980b9':'#7f8c8d'):'';
+    h+='<div class="'+cls+'" onclick="goDay(\''+ds+'\')">';
+    h+='<div class="dc-num" style="'+(isT?'font-weight:700;color:var(--g);':hc?'color:'+hc+';':'')+'">'+d+'</div>';
+    if(hd)h+='<div class="dc-hol" style="color:'+hc+';">'+x(hd[0])+'</div>';
+    var names=[];
+    vs.forEach(function(v){
+      var n=v.walkin?v.walkin.split(' ')[0]:(function(){var c=S.customers.find(function(c){return c.id===v.custId;});return c?c.name.split(' ')[0]:'?';})();
+      if(names.indexOf(n)<0)names.push(n);
+    });
+    names.slice(0,3).forEach(function(n){h+='<div class="dc-nam">'+x(n)+'</div>';});
+    if(names.length>3)h+='<div style="font-size:7px;color:var(--mut);">+'+(names.length-3)+'</div>';
+    h+='</div>';
+  }
+  h+='</div></div>';
+  var mv=visitsInMonth(V.yr,V.mo);
+  var rev=mv.reduce(function(s,v){return s+vTotal(v);},0);
+  if(mv.length)h+='<div class="card" style="padding:9px 13px;margin-top:9px;font-size:13px;"><span style="color:var(--mut);">סיכום: </span><b>'+mv.length+'</b> ביקורים &nbsp;·&nbsp; <b style="color:var(--g);">₪'+rev.toFixed(2)+'</b> הכנסה</div>';
+  else h+='<div class="card" style="padding:9px 13px;margin-top:9px;color:var(--mut);font-size:12px;">אין ביקורים החודש. לחץ על יום.</div>';
+  return h;
+}
+function prevMo(){if(V.mo===0){V.mo=11;V.yr--;}else V.mo--;render();}
+function nextMo(){if(V.mo===11){V.mo=0;V.yr++;}else V.mo++;render();}
+function goDay(ds){V.day=ds;go('day');}
+
+// ════════════════════════════════════
+// DAY SHEET
+// ════════════════════════════════════
+function rDay(){
+  var h='';
+  h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:13px;flex-wrap:wrap;">';
+  h+='<b style="font-size:17px;color:var(--g);">📋 יומן יומי</b>';
+  h+='<input type="date" value="'+V.day+'" onchange="V.day=this.value;render();" style="width:158px;">';
+  h+='<span style="font-size:12px;color:var(--mut);">'+fmtDate(V.day)+'</span></div>';
+  var vs=S.visits[V.day]||[];
+  if(!vs.length)h+='<div class="card" style="padding:22px;text-align:center;color:var(--mut);"><div style="font-size:28px;margin-bottom:6px;">🌱</div>אין ביקורים ביום זה.</div>';
+  vs.forEach(function(v){h+=rVisit(v,V.day);});
+  // add visit panel
+  h+='<div class="card" style="padding:12px 14px;border:2px dashed #b8d4b0;margin-top:5px;">';
+  h+='<div class="lbl">הוסף ביקור לקוח</div>';
+  h+='<input type="text" id="csq" placeholder="🔍 חיפוש לקוח..." value="'+x(V.custQ)+'" oninput="V.custQ=this.value;render();" style="margin-bottom:8px;font-size:14px;">';
+  h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;">';
+  var sc=sortedCusts(V.custQ);
+  if(!sc.length)h+='<span style="font-size:12px;color:var(--mut);">'+(V.custQ?'לא נמצא.':'אין לקוחות.')+'</span>';
+  sc.forEach(function(c){
+    var cnt=allVisits().filter(function(v){return v.custId===c.id;}).length;
+    h+='<button class="btn bo bsm" onclick="addVisit(\''+V.day+'\','+c.id+')">+ '+x(c.name)+(cnt?' <small style="opacity:.6;">('+cnt+')</small>':'')+'</button>';
+  });
+  h+='</div>';
+  h+='<div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:9px;">';
+  h+='<div style="flex:1;min-width:160px;"><label class="lbl">לקוח מזדמן (בלי להוסיף לרשימה)</label><input type="text" id="wi" placeholder="כתוב שם לקוח מזדמן..."></div>';
+  h+='<button class="btn bs bsm" onclick="addWalkin(\''+V.day+'\')">+ הוסף</button>';
+  h+='</div>';
+  if(!V.addCust){
+    h+='<button class="btn bs bsm" onclick="V.addCust=true;render();">👤 הוסף לקוח חדש לרשימה</button>';
+  }else{
+    h+='<div class="ic"><b style="font-size:12px;color:var(--g);">לקוח חדש</b><div class="two" style="margin-top:7px;">';
+    h+='<div><label class="lbl">שם *</label><input type="text" id="ncn"></div>';
+    h+='<div><label class="lbl">כתובת</label><input type="text" id="nca"></div>';
+    h+='<div><label class="lbl">טלפון</label><input type="text" id="ncp"></div>';
+    h+='</div><div style="display:flex;gap:6px;">';
+    h+='<button class="btn bg bsm" onclick="addCustInline()">הוסף</button>';
+    h+='<button class="btn bo bsm" onclick="V.addCust=false;render();">ביטול</button>';
+    h+='</div></div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+function rVisit(v,ds){
+  var isWI=!!v.walkin;
+  var c=isWI?null:S.customers.find(function(c){return c.id===v.custId;});
+  var name=isWI?v.walkin:(c?c.name:'לא ידוע');
+  var f1=parseFloat(v.fee)||0, f2=parseFloat(v.fee2)||0;
+  var f2v=f2*1.18;
+  var itT=(v.items||[]).reduce(function(s,i){return s+(i.qty||0)*(parseFloat(i.price)||0);},0);
+  var h='<div class="card vc">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px;">';
+  h+='<div><div style="font-size:14px;font-weight:700;color:var(--g);">🏡 '+x(name)+(isWI?'<span class="walkin-tag">מזדמן</span>':'')+'</div>';
+  if(c&&c.address)h+='<div style="font-size:11px;color:var(--mut);margin-top:1px;">📍 '+x(c.address)+'</div>';
+  h+='</div><button class="btn br bxs" onclick="delVisit(\''+ds+'\',\''+v.id+'\')">הסר</button></div>';
+  h+='<div style="margin-bottom:10px;"><label class="lbl">הערות עבודה</label>';
+  h+='<textarea rows="2" placeholder="תאר את העבודה..." onchange="patchVisit(\''+ds+'\',\''+v.id+'\',\'notes\',this.value)">'+x(v.notes||'')+'</textarea></div>';
+  h+='<div class="fr">';
+  h+='<div class="fb"><label class="lbl">עלות ביקור 1 (₪)</label>';
+  h+='<input type="number" min="0" step="1" value="'+(v.fee!==undefined&&v.fee!==''?v.fee:'')+'" placeholder="הכנס עלות..." onchange="setFee(\''+ds+'\',\''+v.id+'\',\'fee\',this.value,'+(v.custId||'null')+')">';
+  if(!isWI)h+='<div style="font-size:10px;color:var(--mut);margin-top:2px;">💡 נשמר לביקור הבא</div>';
+  h+='</div>';
+  h+='<div class="fb"><label class="lbl">עלות ביקור 2 + מע״מ (₪)</label>';
+  h+='<input type="number" min="0" step="1" value="'+(v.fee2!==undefined&&v.fee2!==''?v.fee2:'')+'" placeholder="הכנס עלות..." onchange="patchVisit(\''+ds+'\',\''+v.id+'\',\'fee2\',this.value)">';
+  if(f2>0)h+='<div style="font-size:11px;color:var(--mut);margin-top:2px;">+ 18% מע״מ = ₪'+f2v.toFixed(2)+'</div>';
+  h+='</div></div>';
+  h+='<div style="margin-bottom:10px;"><label class="lbl">פריטים שנוספו</label>';
+  (v.items||[]).forEach(function(it){h+=rItem(it,ds,v.id);});
+  h+='<button class="btn bs bsm" style="margin-top:5px;" onclick="addItem(\''+ds+'\',\''+v.id+'\')">+ הוסף פריט</button></div>';
+  h+='<div class="sub">';
+  if(f1>0)h+='<div class="sr"><span>עלות ביקור 1</span><span>₪'+f1.toFixed(2)+'</span></div>';
+  if(f2>0)h+='<div class="sr"><span>עלות ביקור 2 + מע״מ</span><span>₪'+f2v.toFixed(2)+'</span></div>';
+  if(itT>0)h+='<div class="sr"><span>פריטים</span><span>₪'+itT.toFixed(2)+'</span></div>';
+  h+='<div class="st"><span>סה״כ</span><span>₪'+(f1+f2v+itT).toFixed(2)+'</span></div>';
+  h+='</div></div>';
+  return h;
+}
+
+function rItem(item,ds,vid){
+  var h='<div class="ir"><div class="ig">';
+  var cOpts='';CATS.forEach(function(c){cOpts+='<option'+(c===item.cat?' selected':'')+'>'+c+'</option>';});
+  h+='<select onchange="changeItemCat(\''+ds+'\',\''+vid+'\',\''+item.id+'\',this.value)">'+cOpts+'</select>';
+  if(item.cat==='צמחים'){
+    h+='<div class="acw"><input type="text" class="pi" data-ds="'+ds+'" data-vid="'+vid+'" data-iid="'+item.id+'" value="'+x(item.name)+'" placeholder="שם הצמח..."><div class="sug" id="sg-'+item.id+'"></div></div>';
+  }else if(item.cat==='דשן'){
+    var fOpts='<option value="">בחר...</option>';FERT.forEach(function(f){fOpts+='<option'+(f===item.name?' selected':'')+'>'+f+'</option>';});
+    h+='<select onchange="patchItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'name\',this.value)">'+fOpts+'</select>';
+  }else{
+    h+='<input type="text" value="'+x(item.name)+'" placeholder="'+(item.cat==='ריסוס'?'סוג ריסוס...':'תיאור...')+'" onchange="patchItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'name\',this.value)">';
+  }
+  h+='<input type="number" min="1" value="'+item.qty+'" style="text-align:center;" onchange="patchItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'qty\',this.value)">';
+  h+='<input type="number" min="0" step="0.01" value="'+x(item.price)+'" placeholder="₪" onchange="patchItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'price\',this.value)">';
+  h+='<button onclick="delItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\')" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:15px;padding:0;">✕</button>';
+  h+='</div>';
+  if(item.cat==='צמחים'){
+    var sOpts='';SIZES.forEach(function(s){sOpts+='<option'+(s===item.size?' selected':'')+'>'+s+'</option>';});
+    h+='<div style="display:flex;gap:5px;align-items:center;margin-top:5px;"><span style="font-size:10px;color:var(--mut);font-weight:700;">גודל:</span><select style="width:106px;font-size:11px;" onchange="patchItem(\''+ds+'\',\''+vid+'\',\''+item.id+'\',\'size\',this.value)">'+sOpts+'</select></div>';
+  }
+  h+='</div>';
+  return h;
+}
+
+// ════════════════════════════════════
+// MONTH VIEW
+// ════════════════════════════════════
+function rMonth(){
+  var h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">';
+  h+='<button class="btn bo bsm" onclick="prevMo()">← הקודם</button>';
+  h+='<b style="font-size:17px;color:var(--g);">'+MN[V.mo]+' '+V.yr+' — סיכום</b>';
+  h+='<button class="btn bo bsm" onclick="nextMo()">הבא →</button></div>';
+  var allV=visitsInMonth(V.yr,V.mo);
+  // group
+  var groups=[];
+  S.customers.forEach(function(c){var vs=allV.filter(function(v){return v.custId===c.id;});if(vs.length)groups.push({name:c.name,id:c.id,addr:c.address,phone:c.phone,vs:vs});});
+  var wi={};allV.filter(function(v){return v.walkin;}).forEach(function(v){(wi[v.walkin]=wi[v.walkin]||[]).push(v);});
+  Object.keys(wi).forEach(function(n){groups.push({name:n,id:null,addr:'',phone:'',vs:wi[n]});});
+  var grand=groups.reduce(function(s,g){return s+g.vs.reduce(function(ss,v){return ss+vTotal(v);},0);},0);
+  var totF1=allV.reduce(function(s,v){return s+(parseFloat(v.fee)||0);},0);
+  var totF2=allV.reduce(function(s,v){return s+(parseFloat(v.fee2)||0)*1.18;},0);
+  if(!groups.length){h+='<div class="card" style="padding:22px;text-align:center;color:var(--mut);">אין ביקורים החודש.</div>';return h;}
+  groups.forEach(function(g){
+    var tot=g.vs.reduce(function(s,v){return s+vTotal(v);},0);
+    h+='<div class="card" style="margin-bottom:11px;padding:13px 15px;">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">';
+    h+='<div><div style="font-size:14px;font-weight:700;color:var(--g);">'+x(g.name)+(g.id===null?'<span class="walkin-tag">מזדמן</span>':'')+'</div>';
+    h+='<div style="font-size:11px;color:var(--mut);">'+g.vs.length+' ביקורים החודש</div></div>';
+    h+='<div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;">';
+    h+='<b style="font-size:15px;color:var(--g);">₪'+tot.toFixed(2)+'</b>';
+    h+='<button class="btn bg bsm" onclick="showBill(\''+x(g.name)+'\','+JSON.stringify(g.id)+',\''+x(g.addr||'')+'\',\''+x(g.phone||'')+'\','+V.yr+','+V.mo+')">📄 חשבונית</button>';
+    h+='<button class="btn bw bsm" onclick="sendWA(\''+x(g.name)+'\','+JSON.stringify(g.id)+','+V.yr+','+V.mo+')">💬 וואטסאפ</button>';
+    h+='</div></div>';
+    h+='<table class="bt"><thead><tr><th>תאריך</th><th>עלות 1</th><th>עלות 2+מע״מ</th><th>פריטים</th><th>סה״כ</th></tr></thead><tbody>';
+    g.vs.slice().sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(v){
+      var p=v.date.split('-').map(Number);
+      var f1=parseFloat(v.fee)||0, f2=parseFloat(v.fee2)||0;
+      var il=(v.items||[]).length?v.items.map(function(i){return x(i.name)+'('+i.qty+')';}).join(', '):'—';
+      h+='<tr><td>'+p[2]+'/'+p[1]+'</td><td>'+(f1?'₪'+f1.toFixed(2):'—')+'</td><td>'+(f2?'₪'+(f2*1.18).toFixed(2):'—')+'</td><td style="font-size:11px;">'+il+'</td><td><b>₪'+vTotal(v).toFixed(2)+'</b></td></tr>';
+    });
+    h+='</tbody></table></div>';
+  });
+  h+='<div class="card" style="padding:13px 15px;background:var(--gbg);border:2px solid var(--g);">';
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">';
+  h+='<div><div style="font-size:12px;color:#5a5040;"><b>'+allV.length+'</b> ביקורים · <b>'+groups.length+'</b> לקוחות</div>';
+  h+='<div style="font-size:11px;color:var(--mut);">עלות 1: ₪'+totF1.toFixed(2)+' | עלות 2+מע״מ: ₪'+totF2.toFixed(2)+'</div>';
+  h+='<div style="font-size:18px;font-weight:700;color:var(--g);">סה״כ: ₪'+grand.toFixed(2)+'</div></div>';
+  h+='<div style="display:flex;gap:7px;flex-wrap:wrap;">';
+  h+='<button class="btn bg" onclick="copyAllBills()">📋 העתק הכל</button>';
+  h+='<button class="btn bw" onclick="sendAllWA()">💬 שלח הכל</button>';
+  h+='</div></div></div>';
+  return h;
+}
+
+// ════════════════════════════════════
+// STATS
+// ════════════════════════════════════
+function rStats(){
+  var today=new Date(), ts=today.toISOString().slice(0,10);
+  var av=allVisits();
+  var dV=av.filter(function(v){return v.date===ts;}), dR=dV.reduce(function(s,v){return s+vTotal(v);},0);
+  var ws=new Date(today);ws.setDate(today.getDate()-today.getDay());var wsStr=ws.toISOString().slice(0,10);
+  var wV=av.filter(function(v){return v.date>=wsStr&&v.date<=ts;}), wR=wV.reduce(function(s,v){return s+vTotal(v);},0);
+  var mV=visitsInMonth(today.getFullYear(),today.getMonth()), mR=mV.reduce(function(s,v){return s+vTotal(v);},0);
+  var yPfx=today.getFullYear()+'-', yV=av.filter(function(v){return v.date.indexOf(yPfx)===0;}), yR=yV.reduce(function(s,v){return s+vTotal(v);},0);
+  var mF1=mV.reduce(function(s,v){return s+(parseFloat(v.fee)||0);},0);
+  var mF2=mV.reduce(function(s,v){return s+(parseFloat(v.fee2)||0)*1.18;},0);
+  var mIt=mV.reduce(function(s,v){return s+(v.items||[]).reduce(function(ss,i){return ss+(i.qty||0)*(parseFloat(i.price)||0);},0);},0);
+  var h='<b style="font-size:17px;color:var(--g);display:block;margin-bottom:13px;">📈 נתוני הכנסות</b>';
+  h+='<div class="stat-g">';
+  var cards=[['היום','₪'+dR.toFixed(2),dV.length+' ביקורים'],
+             ['השבוע','₪'+wR.toFixed(2),wV.length+' ביקורים'],
+             [MN[today.getMonth()],'₪'+mR.toFixed(2),mV.length+' ביקורים'],
+             [today.getFullYear(),'₪'+yR.toFixed(2),yV.length+' ביקורים']];
+  cards.forEach(function(c){h+='<div class="stat-c"><div class="stat-n">'+c[1]+'</div><div class="stat-l">'+c[0]+'</div><div class="stat-s">'+c[2]+'</div></div>';});
+  h+='</div>';
+  h+='<div class="chart-w"><div class="chart-t">פירוט החודש — '+MN[today.getMonth()]+' '+today.getFullYear()+'</div>';
+  h+='<div style="display:flex;gap:10px;flex-wrap:wrap;">';
+  h+='<div style="flex:1;min-width:110px;background:#f5fbf3;border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;color:var(--g);">₪'+mF1.toFixed(2)+'</div><div style="font-size:11px;color:var(--mut);">עלות ביקור 1</div></div>';
+  h+='<div style="flex:1;min-width:110px;background:#eaf4fb;border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;color:#2980b9;">₪'+mF2.toFixed(2)+'</div><div style="font-size:11px;color:var(--mut);">עלות 2 + מע״מ</div></div>';
+  h+='<div style="flex:1;min-width:110px;background:#fdf0f0;border:1px solid var(--bdr);border-radius:8px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:700;color:var(--red);">₪'+mIt.toFixed(2)+'</div><div style="font-size:11px;color:var(--mut);">פריטים</div></div>';
+  h+='</div></div>';
+  h+='<div class="chart-w"><div class="chart-t">הכנסות — 6 חודשים אחרונים</div><canvas id="ch-mon" height="160"></canvas></div>';
+  h+='<div class="chart-w"><div class="chart-t">לקוחות מובילים</div><canvas id="ch-cust" height="180"></canvas></div>';
+  h+='<div class="chart-w"><div class="chart-t">הכנסה יומית — '+MN[today.getMonth()]+' '+today.getFullYear()+'</div><canvas id="ch-day" height="150"></canvas></div>';
+  return h;
+}
+
+// Chart.js lazy load
+var _cjs=false,_cjsQ=[];
+function loadChartsAndDraw(){
+  if(typeof Chart!=='undefined'){_drawCharts();return;}
+  if(_cjs){_cjsQ.push(_drawCharts);return;}
+  _cjs=true;
+  var s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+  s.onload=function(){_drawCharts();_cjsQ.forEach(function(f){f();});_cjsQ=[];};
+  s.onerror=function(){console.warn('Chart.js failed');};
+  document.head.appendChild(s);
+}
+var _charts={};
+function _drawCharts(){
+  if(typeof Chart==='undefined')return;
+  var today=new Date();
+  // 6 month bar
+  var ml=[],md=[];
+  for(var i=5;i>=0;i--){var d=new Date(today.getFullYear(),today.getMonth()-i,1);ml.push(MN[d.getMonth()].slice(0,3));md.push(visitsInMonth(d.getFullYear(),d.getMonth()).reduce(function(s,v){return s+vTotal(v);},0));}
+  mkChart('ch-mon','bar',ml,md,'#3a6b35');
+  // customers pie
+  var ct={};allVisits().forEach(function(v){var k=v.walkin||(v.custId?String(v.custId):null);if(!k)return;var c=S.customers.find(function(c){return c.id===v.custId;});var n=v.walkin?v.walkin:(c?c.name:'?');ct[n]=(ct[n]||0)+vTotal(v);});
+  var top=Object.entries(ct).sort(function(a,b){return b[1]-a[1];}).slice(0,6);
+  if(top.length&&document.getElementById('ch-cust')){
+    rmChart('ch-cust');
+    _charts['ch-cust']=new Chart(document.getElementById('ch-cust'),{type:'doughnut',data:{labels:top.map(function(t){return t[0];}),datasets:[{data:top.map(function(t){return parseFloat(t[1].toFixed(2));}),backgroundColor:['#3a6b35','#7a9e72','#2980b9','#e67e22','#c0392b','#8e44ad'],borderWidth:2,borderColor:'#fff'}]},options:{plugins:{legend:{position:'bottom',labels:{font:{family:'Heebo',size:11},boxWidth:12}}},cutout:'55%'}});
+  }
+  // daily line
+  var dl=[],dd=[];
+  for(var dd2=1;dd2<=daysIn(today.getFullYear(),today.getMonth());dd2++){var ds=dkey(today.getFullYear(),today.getMonth(),dd2);dl.push(String(dd2));dd.push((S.visits[ds]||[]).reduce(function(s,v){return s+vTotal(v);},0));}
+  mkChart('ch-day','line',dl,dd,'#2980b9');
+}
+function rmChart(id){if(_charts[id]){_charts[id].destroy();delete _charts[id];}}
+function mkChart(id,type,labels,data,color){
+  rmChart(id);var el=document.getElementById(id);if(!el)return;
+  _charts[id]=new Chart(el,{type:type,data:{labels:labels,datasets:[{data:data,backgroundColor:type==='bar'?color+'99':color+'33',borderColor:color,borderWidth:2,fill:type==='line',tension:.35,pointRadius:3}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '₪'+v;},font:{family:'Heebo',size:10}},grid:{color:'#e8e0cc'}},x:{ticks:{font:{family:'Heebo',size:10}},grid:{display:false}}}}});
+}
+
+// ════════════════════════════════════
+// CUSTOMERS VIEW
+// ════════════════════════════════════
+function rCustomers(){
+  var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px;">';
+  h+='<b style="font-size:17px;color:var(--g);">לקוחות</b>';
+  h+='<button class="btn bg" onclick="openModal(\'addCust\')">+ הוסף לקוח</button></div>';
+  if(!S.customers.length){h+='<div class="card" style="padding:22px;text-align:center;color:var(--mut);">אין לקוחות עדיין.</div>';return h;}
+  sortedCusts('').forEach(function(c){
+    var av=allVisits().filter(function(v){return v.custId===c.id;}), rev=av.reduce(function(s,v){return s+vTotal(v);},0);
+    h+='<div class="card" style="padding:12px 14px;margin-bottom:9px;">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:7px;">';
+    h+='<div><div style="font-size:13px;font-weight:700;color:var(--g);">'+x(c.name)+'</div>';
+    h+='<div style="font-size:11px;color:var(--mut);margin-top:1px;">📍 '+x(c.address)+' · 📞 '+x(c.phone)+'</div></div>';
+    h+='<div style="display:flex;align-items:center;gap:8px;">';
+    h+='<div style="text-align:right;font-size:12px;"><div style="color:var(--mut);">'+av.length+' ביקורים</div><div style="color:var(--g);font-weight:700;font-size:13px;">₪'+rev.toFixed(2)+'</div></div>';
+    h+='<button class="btn bo bxs" onclick="openModal(\'editCust\','+c.id+')">✏️ ערוך</button>';
+    h+='<button class="btn br bxs" onclick="delCust('+c.id+')">הסר</button>';
+    h+='</div></div></div>';
+  });
+  return h;
+}
+
+// ════════════════════════════════════
+// MODALS
+// ════════════════════════════════════
+function openModal(type,id){V.modal=type;V.editId=id||null;render();}
+function closeModal(){V.modal=null;V.editId=null;render();}
+
+function rModal(){
+  if(V.modal==='addCust')return rAddCustModal();
+  if(V.modal==='editCust')return rEditCustModal();
+  if(V.modal==='bill')return rBillModal();
+  return '';
+}
+function rAddCustModal(){
+  return '<div class="ov" onclick="if(event.target===this)closeModal()"><div class="modal" style="max-width:380px;"><b style="font-size:15px;color:var(--g);display:block;margin-bottom:13px;">לקוח חדש</b>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">שם *</label><input type="text" id="ncn"></div>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">כתובת</label><input type="text" id="nca"></div>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">טלפון</label><input type="text" id="ncp"></div>'
+    +'<div style="display:flex;gap:8px;margin-top:13px;">'
+    +'<button class="btn bg" onclick="addCustModal()">הוסף לקוח</button>'
+    +'<button class="btn bo" onclick="closeModal()">ביטול</button>'
+    +'</div></div></div>';
+}
+function rEditCustModal(){
+  var c=S.customers.find(function(c){return c.id===V.editId;});if(!c)return '';
+  return '<div class="ov" onclick="if(event.target===this)closeModal()"><div class="modal" style="max-width:380px;"><b style="font-size:15px;color:var(--g);display:block;margin-bottom:13px;">עריכת לקוח</b>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">שם *</label><input type="text" id="ecn" value="'+x(c.name)+'"></div>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">כתובת</label><input type="text" id="eca" value="'+x(c.address)+'"></div>'
+    +'<div style="margin-bottom:9px;"><label class="lbl">טלפון</label><input type="text" id="ecp" value="'+x(c.phone)+'"></div>'
+    +'<div style="display:flex;gap:8px;margin-top:13px;">'
+    +'<button class="btn bg" onclick="saveCust('+c.id+')">שמור שינויים</button>'
+    +'<button class="btn bo" onclick="closeModal()">ביטול</button>'
+    +'</div></div></div>';
+}
+function rBillModal(){
+  var b=V.billData;if(!b)return '';
+  var h='<div class="ov" onclick="if(event.target===this)closeModal()"><div class="modal">';
+  h+='<div class="np" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;flex-wrap:wrap;gap:6px;">';
+  h+='<b style="font-size:14px;color:var(--g);">תצוגת חשבונית</b>';
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+  h+='<button class="btn bg bsm" onclick="window.print()">🖨 הדפסה</button>';
+  h+='<button class="btn bsm" style="background:#5a8a7a;color:#fff;" onclick="copyBill()">📋 העתק</button>';
+  h+='<button class="btn bw bsm" onclick="waBill()">💬 וואטסאפ</button>';
+  h+='<button class="btn bo bsm" onclick="closeModal()">סגור</button>';
+  h+='</div></div>';
+  h+='<div style="background:#fff;border:1px solid var(--bdr);border-radius:9px;padding:18px 20px;">';
+  h+='<div style="display:flex;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:8px;">';
+  h+='<div><div style="font-size:17px;font-weight:700;color:var(--g);">🌿 יומן מתן רביד גינון והשקיה</div><div style="font-size:11px;color:var(--mut);margin-top:2px;">שירותי גינון מקצועיים</div></div>';
+  h+='<div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:var(--red);">חשבונית</div><div style="font-size:11px;color:var(--mut);">תקופה: '+b.month+' '+b.year+'</div><div style="font-size:11px;color:var(--mut);">תאריך: '+new Date().toLocaleDateString('he-IL')+'</div></div></div>';
+  h+='<div style="background:var(--sand);border-radius:7px;padding:9px 12px;margin-bottom:13px;">';
+  h+='<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:var(--mut);margin-bottom:3px;">לכבוד</div>';
+  h+='<div style="font-weight:700;font-size:13px;">'+x(b.name)+'</div>';
+  if(b.addr)h+='<div style="font-size:11px;color:#5a5040;">'+x(b.addr)+'</div>';
+  if(b.phone)h+='<div style="font-size:11px;color:#5a5040;">'+x(b.phone)+'</div>';
+  h+='</div>';
+  h+='<table class="bt" style="margin-bottom:13px;"><thead><tr><th>תאריך</th><th>תיאור</th><th>סכום</th></tr></thead><tbody>';
+  b.visits.forEach(function(v){
+    var p=v.date.split('-').map(Number);
+    var f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+    h+='<tr><td style="white-space:nowrap;">'+p[2]+'/'+p[1]+'/'+b.year+'</td><td>';
+    if(v.notes)h+='<div style="font-style:italic;color:#5a5040;margin-bottom:2px;">'+x(v.notes)+'</div>';
+    if(f1>0)h+='<div>עלות ביקור 1: ₪'+f1.toFixed(2)+'</div>';
+    if(f2>0)h+='<div>עלות ביקור 2 + מע״מ 18%: ₪'+(f2*1.18).toFixed(2)+'</div>';
+    (v.items||[]).forEach(function(it){h+='<div style="color:#5a5040;">• '+x(it.name)+(it.size&&it.cat==='צמחים'?' ('+x(it.size)+')':'')+' × '+it.qty+' @ ₪'+(parseFloat(it.price)||0)+'</div>';});
+    h+='</td><td style="font-weight:600;text-align:left;">₪'+vTotal(v).toFixed(2)+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  h+='<div style="display:flex;justify-content:flex-end;"><div style="min-width:185px;"><div style="display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--bdr);font-size:14px;font-weight:700;color:var(--g);"><span>סה״כ לתשלום</span><span>₪'+b.total.toFixed(2)+'</span></div></div></div>';
+  h+='<div style="margin-top:16px;padding-top:10px;border-top:1px dashed var(--bdr);font-size:11px;color:var(--mut);text-align:center;">תודה על אמונך! התשלום נדרש תוך 14 יום. 🌿</div>';
+  h+='</div></div></div>';
+  return h;
+}
+
+// ════════════════════════════════════
+// ACTIONS
+// ════════════════════════════════════
+function addVisit(ds,custId){
+  var lf=getVisitFee(custId);
+  var v={id:Date.now()+'_'+Math.random().toString(36).slice(2),custId:custId,fee:lf.fee,fee2:lf.fee2,notes:'',items:[]};
+  if(!S.visits[ds])S.visits[ds]=[];
+  S.visits[ds].push(v);render();toast('ביקור נוסף ✓');
+}
+function addWalkin(ds){
+  var n=(document.getElementById('wi')||{}).value||'';
+  if(!n.trim()){toast('נא לכתוב שם לקוח מזדמן');return;}
+  var v={id:Date.now()+'_'+Math.random().toString(36).slice(2),walkin:n.trim(),fee:'',fee2:'',notes:'',items:[]};
+  if(!S.visits[ds])S.visits[ds]=[];
+  S.visits[ds].push(v);render();toast('לקוח מזדמן נוסף ✓');
+}
+function delVisit(ds,vid){S.visits[ds]=(S.visits[ds]||[]).filter(function(v){return v.id!==vid;});render();toast('ביקור הוסר');}
+function patchVisit(ds,vid,key,val){var v=findVisit(ds,vid);if(v){v[key]=val;save();}}
+function setFee(ds,vid,key,val,custId){
+  var v=findVisit(ds,vid);if(!v)return;
+  v[key]=val===''?'':parseFloat(val);
+  if(key==='fee'&&custId){var c=S.customers.find(function(c){return c.id===custId;});if(c)c.defaultFee=v[key];}
+  save();render();
+}
+function addItem(ds,vid){var v=findVisit(ds,vid);if(!v)return;if(!v.items)v.items=[];v.items.push(newItem());render();}
+function delItem(ds,vid,iid){var v=findVisit(ds,vid);if(!v)return;v.items=v.items.filter(function(i){return i.id!==iid;});render();}
+function changeItemCat(ds,vid,iid,val){var it=findItem(ds,vid,iid);if(!it)return;it.cat=val;it.name='';it.size='כוסית';render();}
+function patchItem(ds,vid,iid,key,val){
+  var it=findItem(ds,vid,iid);if(!it)return;
+  if(key==='qty')it.qty=parseInt(val)||1;
+  else if(key==='price'){it.price=val;savePlant(it.name,val);}
+  else it[key]=val;
+  save();if(key==='price'||key==='qty')render();
+}
+function savePlant(name,price){
+  if(!name||!name.trim())return;name=name.trim();
+  var ex=S.plants.find(function(p){return p.name===name;});
+  if(ex)ex.price=price;else S.plants.push({name:name,price:price});
+  save();
+}
+
+function addCustModal(){
+  var n=(document.getElementById('ncn')||{}).value||'';
+  if(!n.trim()){toast('נא להזין שם');return;}
+  S.customers.push({id:S.nextId++,name:n.trim(),address:(document.getElementById('nca')||{}).value||'',phone:(document.getElementById('ncp')||{}).value||'',defaultFee:''});
+  save();closeModal();toast('לקוח נוסף ✓');
+}
+function addCustInline(){
+  var n=(document.getElementById('ncn')||{}).value||'';
+  if(!n.trim()){toast('נא להזין שם');return;}
+  S.customers.push({id:S.nextId++,name:n.trim(),address:(document.getElementById('nca')||{}).value||'',phone:(document.getElementById('ncp')||{}).value||'',defaultFee:''});
+  save();V.addCust=false;render();toast('לקוח נוסף ✓');
+}
+function saveCust(id){
+  var c=S.customers.find(function(c){return c.id===id;});if(!c)return;
+  var n=(document.getElementById('ecn')||{}).value||'';if(!n.trim()){toast('נא להזין שם');return;}
+  c.name=n.trim();c.address=(document.getElementById('eca')||{}).value||'';c.phone=(document.getElementById('ecp')||{}).value||'';
+  save();closeModal();toast('פרטים עודכנו ✓');
+}
+function delCust(id){if(!confirm('למחוק לקוח זה?'))return;S.customers=S.customers.filter(function(c){return c.id!==id;});save();render();toast('לקוח הוסר');}
+
+// ════════════════════════════════════
+// WHATSAPP & BILLING
+// ════════════════════════════════════
+function visitLine(v){
+  var p=v.date.split('-').map(Number);
+  var f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+  var L=['📅 '+p[2]+'/'+p[1]+':'];
+  if(v.notes)L.push('   '+v.notes);
+  if(f1>0)L.push('   עלות ביקור 1: ₪'+f1.toFixed(2));
+  if(f2>0)L.push('   עלות ביקור 2 + מע"מ: ₪'+(f2*1.18).toFixed(2));
+  (v.items||[]).forEach(function(i){L.push('   • '+i.name+(i.size&&i.cat==='צמחים'?' ('+i.size+')':'')+' × '+i.qty+(i.price?' @ ₪'+(parseFloat(i.price)||0):''));});
+  L.push('   סה"כ ביקור: ₪'+vTotal(v).toFixed(2));
+  return L.join('\n');
+}
+
+function showBill(name,id,addr,phone,yr,mo){
+  var allV=visitsInMonth(yr,mo);
+  var vs=allV.filter(function(v){return id?v.custId===id:v.walkin===name;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  V.billData={name:name,id:id,addr:addr,phone:phone,visits:vs,total:vs.reduce(function(s,v){return s+vTotal(v);},0),month:MN[mo],year:yr};
+  openModal('bill');
+}
+function copyBill(){navigator.clipboard.writeText(billText()).then(function(){toast('הועתק ✓');}).catch(function(){toast('שגיאה');});}
+function waBill(){window.open('https://wa.me/?text='+encodeURIComponent(billText()),'_blank');}
+function billText(){
+  var b=V.billData;
+  var L=['חשבונית שירות גינון — '+b.month+' '+b.year,'לקוח: '+b.name,(b.addr?'כתובת: '+b.addr:''),'─'.repeat(28)].filter(Boolean);
+  b.visits.forEach(function(v){L.push(visitLine(v),'');});
+  L.push('─'.repeat(28),'סה"כ לתשלום: ₪'+b.total.toFixed(2),'','תודה רבה! 🌿');
+  return L.join('\n');
+}
+function sendWA(name,id,yr,mo){
+  var allV=visitsInMonth(yr,mo);
+  var vs=allV.filter(function(v){return id?v.custId===id:v.walkin===name;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var tot=vs.reduce(function(s,v){return s+vTotal(v);},0);
+  var f1t=vs.reduce(function(s,v){return s+(parseFloat(v.fee)||0);},0);
+  var f2t=vs.reduce(function(s,v){return s+(parseFloat(v.fee2)||0)*1.18;},0);
+  var itT=vs.reduce(function(s,v){return s+(v.items||[]).reduce(function(ss,i){return ss+(i.qty||0)*(parseFloat(i.price)||0);},0);},0);
+  var L=['שלום '+name+',','','סיכום ביקורים לחודש '+MN[mo]+' '+yr+':','─'.repeat(30),''];
+  vs.forEach(function(v){L.push(visitLine(v),'');});
+  L.push('─'.repeat(30),'סיכום חודש '+MN[mo]+':');
+  if(f1t>0)L.push('  עלות ביקורים 1: ₪'+f1t.toFixed(2));
+  if(f2t>0)L.push('  עלות ביקורים 2 + מע"מ: ₪'+f2t.toFixed(2));
+  if(itT>0)L.push('  פריטים ותוספות: ₪'+itT.toFixed(2));
+  L.push('','סה"כ לתשלום: ₪'+tot.toFixed(2),'','תודה רבה! 🌿');
+  window.open('https://wa.me/?text='+encodeURIComponent(L.join('\n')),'_blank');
+}
+function allBillsText(){
+  var allV=visitsInMonth(V.yr,V.mo);
+  var groups=[];
+  S.customers.forEach(function(c){var vs=allV.filter(function(v){return v.custId===c.id;});if(vs.length)groups.push({name:c.name,vs:vs});});
+  var wi={};allV.filter(function(v){return v.walkin;}).forEach(function(v){(wi[v.walkin]=wi[v.walkin]||[]).push(v);});
+  Object.keys(wi).forEach(function(n){groups.push({name:n+' (מזדמן)',vs:wi[n]});});
+  var grand=allV.reduce(function(s,v){return s+vTotal(v);},0);
+  var L=['סיכום חודשי — '+MN[V.mo]+' '+V.yr,'═'.repeat(30)];
+  groups.forEach(function(g){
+    L.push('','🏡 '+g.name);
+    g.vs.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(v){L.push(visitLine(v),'');});
+    L.push('סה"כ: ₪'+g.vs.reduce(function(s,v){return s+vTotal(v);},0).toFixed(2));
+  });
+  L.push('','═'.repeat(30),'סה"כ כולל: ₪'+grand.toFixed(2));
+  return L.join('\n');
+}
+function copyAllBills(){navigator.clipboard.writeText(allBillsText()).then(function(){toast('הועתק ✓');}).catch(function(){toast('שגיאה');});}
+function sendAllWA(){window.open('https://wa.me/?text='+encodeURIComponent(allBillsText()),'_blank');}
+
+// ════════════════════════════════════
+// AUTOCOMPLETE (plant names)
+// ════════════════════════════════════
+function setupAC(){
+  document.querySelectorAll('.pi').forEach(function(inp){
+    inp.addEventListener('input',function(){
+      var val=this.value,iid=this.dataset.iid,sg=document.getElementById('sg-'+iid);
+      if(!sg)return;
+      var m=S.plants.filter(function(p){return p.name.indexOf(val)>=0&&val.length>0&&p.name!==val;});
+      if(!m.length){sg.classList.remove('open');return;}
+      sg.innerHTML=m.map(function(p){return '<div class="si" data-n="'+x(p.name)+'" data-p="'+x(p.price||'')+'">'+x(p.name)+(p.price?' — ₪'+p.price:'')+'</div>';}).join('');
+      sg.querySelectorAll('.si').forEach(function(el){
+        el.addEventListener('mousedown',function(e){
+          e.preventDefault();
+          var it=findItem(inp.dataset.ds,inp.dataset.vid,inp.dataset.iid);
+          if(it){it.name=this.dataset.n;it.price=this.dataset.p||it.price;save();render();}
+        });
+      });
+      sg.classList.add('open');
+    });
+    inp.addEventListener('blur',function(){
+      var self=this;
+      setTimeout(function(){
+        var sg=document.getElementById('sg-'+self.dataset.iid);
+        if(sg)sg.classList.remove('open');
+        var it=findItem(self.dataset.ds,self.dataset.vid,self.dataset.iid);
+        if(it&&self.value!==it.name){it.name=self.value;savePlant(self.value,it.price);save();}
+      },150);
+    });
+  });
+}
+
+// ════════════════════════════════════
+// PWA
+// ════════════════════════════════════
+var _dp=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();_dp=e;});
+function installApp(){
+  if(_dp){_dp.prompt();_dp.then(function(){_dp=null;});toast('האפליקציה הותקנה! ✓');}
+  else alert('Safari: לחץ שתף ← הוסף למסך הבית');
+}
+
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+loadData();
+render();
+window.addEventListener('beforeunload',function(){save();});
+setInterval(function(){save();},10000);
+</script>
+</body>
+</html>
