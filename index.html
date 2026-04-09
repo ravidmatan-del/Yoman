@@ -2,114 +2,276 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="גינון רביד">
 <meta name="theme-color" content="#3a6b35">
+<meta name="description" content="יומן מתן רביד גינון והשקיה">
 <title>יומן מתן רביד גינון והשקיה</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<!-- App Icon (inline SVG as apple-touch-icon) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233a6b35' width='100' height='100' rx='20'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
+
+<!-- PWA Manifest (inline) -->
+<script>
+  const manifestData = {
+    name: "יומן מתן רביד גינון והשקיה",
+    short_name: "גינון רביד",
+    start_url: "./",
+    scope: "./",
+    display: "standalone",
+    background_color: "#f5f0e8",
+    theme_color: "#3a6b35",
+    orientation: "portrait-primary",
+    lang: "he",
+    icons: [{
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233a6b35' width='100' height='100' rx='20'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E",
+      sizes: "any",
+      type: "image/svg+xml",
+      purpose: "any maskable"
+    }]
+  };
+  const mBlob = new Blob([JSON.stringify(manifestData)], {type:'application/manifest+json'});
+  const mLink = document.createElement('link');
+  mLink.rel = 'manifest';
+  mLink.href = URL.createObjectURL(mBlob);
+  document.currentScript.after(mLink);
+</script>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:Arial,sans-serif;background:#f5f0e8;color:#2c2c1e;min-height:100vh;}
-.btn{cursor:pointer;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:700;transition:all .15s;display:inline-block;text-decoration:none;}
-.bg{background:#3a6b35;color:#fff;}.bg:hover{background:#2e5228;}
-.bs{background:#7a9e72;color:#fff;}.bs:hover{background:#5e7e56;}
-.bo{background:transparent;color:#3a6b35;border:1.5px solid #3a6b35;}.bo:hover{background:#3a6b35;color:#fff;}
-.br{background:#f5e8e0;color:#b5673d;border:1px solid #e0c8b8;}
-.bw{background:#25D366;color:#fff;}.bw:hover{background:#1da851;}
-.bsm{padding:5px 10px;font-size:12px;}.bxs{padding:3px 7px;font-size:11px;border-radius:4px;}
-.card{background:#fffdf7;border:1px solid #d9d0b8;border-radius:12px;box-shadow:0 2px 8px rgba(60,50,20,.07);}
-input,textarea,select{font-family:Arial,sans-serif;border:1.5px solid #c9c0a0;border-radius:6px;padding:7px 9px;font-size:13px;background:#fff;color:#2c2c1e;width:100%;outline:none;box-sizing:border-box;}
-input:focus,textarea:focus,select:focus{border-color:#3a6b35;}
-textarea{resize:vertical;}
-.lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#7a6e55;margin-bottom:4px;display:block;}
-#header{background:linear-gradient(135deg,#2e5228,#3a6b35,#4a8040);padding:14px 18px 0;box-shadow:0 4px 20px rgba(30,50,20,.2);}
-.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.logo-t{color:#fff;font-size:16px;font-weight:700;line-height:1.2;}
-.logo-s{color:#a8d4a0;font-size:11px;margin-top:2px;}
-.tabs{display:flex;gap:3px;flex-wrap:wrap;}
-.tab{cursor:pointer;padding:8px 13px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px;border:none;background:transparent;color:#fff;transition:all .15s;}
-.tab.on{background:#3a6b35;}.tab:hover:not(.on){background:rgba(255,255,255,.15);}
-#main{padding:14px;max-width:900px;margin:0 auto;}
-.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-.chdr{text-align:center;font-size:10px;font-weight:700;color:#7a6e55;padding:2px 0;}
-.dc{cursor:pointer;border-radius:7px;padding:4px 3px;min-height:60px;border:1.5px solid transparent;transition:all .15s;background:#fffdf7;vertical-align:top;}
-.dc:hover{background:#e8f0e4;border-color:#a8c89e;}
-.dc.tod{border-color:#3a6b35!important;background:#eef6eb;}
-.dc.hv{background:#f0f5ee;}
-.dc.hh{border-color:#e8b4b4;background:#fdf0f0;}
-.dc.hv2{border-color:#b4cce8;background:#eaf4fb;}
-.dc.hm{border-color:#c8c8c8;background:#f2f3f4;}
-.dc-n{font-size:12px;margin-bottom:1px;}
-.dc-h{font-size:8px;font-weight:700;line-height:1.1;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.dc-c{font-size:8px;background:#3a6b35;color:#fff;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.legend{display:flex;gap:10px;margin-bottom:7px;flex-wrap:wrap;font-size:10px;align-items:center;}
-.ldot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-left:3px;}
-.vc{margin-bottom:12px;padding:13px 15px;}
-.vh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;flex-wrap:wrap;gap:6px;}
-.fr{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:9px;}
-.fb{min-width:120px;flex:1;}
-.ir{background:#f8f5ef;border-radius:6px;padding:7px 8px;margin-bottom:5px;border:1px solid #e0d8c0;}
-.ig{display:grid;grid-template-columns:88px 1fr 50px 66px 24px;gap:5px;align-items:center;}
-.acw{position:relative;}
-.sug{position:absolute;top:100%;right:0;left:0;background:#fff;border:1.5px solid #3a6b35;border-top:none;border-radius:0 0 6px 6px;z-index:50;max-height:130px;overflow-y:auto;display:none;}
-.sug.show{display:block;}
-.si{padding:6px 9px;cursor:pointer;font-size:12px;}.si:hover{background:#eef6eb;}
-.sub{border-top:2px solid #d9d0b8;padding-top:8px;}
-.sr{display:flex;justify-content:space-between;width:215px;font-size:12px;color:#5a5040;margin-bottom:3px;}
-.st{display:flex;justify-content:space-between;width:215px;font-weight:700;font-size:14px;color:#2e5228;border-top:1px solid #c0b898;padding-top:4px;margin-top:2px;}
-.bt{width:100%;border-collapse:collapse;font-size:12px;}
-.bt th{background:#3a6b35;color:#fff;padding:6px 9px;text-align:right;font-weight:700;}
-.bt td{padding:5px 9px;border-bottom:1px solid #e0d8c0;vertical-align:top;}
-.bt tr:last-child td{border-bottom:none;}
-.ov{position:fixed;inset:0;background:rgba(20,15,5,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px;}
-.modal{background:#fffdf7;border-radius:14px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:22px;}
-#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#3a6b35;color:#fff;padding:8px 20px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.2);display:none;}
-.ic{background:#f0f5ee;border-radius:7px;padding:10px;margin-top:6px;}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
-#bbar{margin-top:16px;border-top:1px solid #d9d0b8;padding:11px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;}
-@media (max-width:600px){
-  #header{padding:10px 11px 0;}
-  .logo-t{font-size:13px;}
-  .logo-s{font-size:10px;}
-  #main{padding:10px;}
-  .tab{padding:6px 9px;font-size:11px;}
-  .ig{grid-template-columns:78px 1fr 42px 56px 22px;gap:4px;}
-  .modal{padding:15px;max-width:100%;}
-  .two{grid-template-columns:1fr;}
-  input,select,textarea{font-size:16px!important;}
-  .sr,.st{width:100%;}
-  .fr{gap:6px;}
-  .card{border-radius:9px;}
+:root {
+  --green:    #3a6b35;
+  --green-d:  #2e5228;
+  --green-l:  #7a9e72;
+  --green-bg: #eef6eb;
+  --sage:     #f0f5ee;
+  --cream:    #fffdf7;
+  --border:   #d9d0b8;
+  --text:     #2c2c1e;
+  --muted:    #7a6e55;
+  --sand:     #f5f0e8;
+  --red:      #b5673d;
+  --red-bg:   #f5e8e0;
+  --wa:       #25D366;
+  --font:     'Heebo', Arial, sans-serif;
+  --radius:   10px;
+  --shadow:   0 2px 10px rgba(60,50,20,.09);
 }
-@media print{#header,.tab,#bbar,.np{display:none!important;}}
-/* ── MOBILE IMPROVEMENTS ── */
-@media (max-width: 600px){
-  #header{padding:12px 12px 0;}
-  .logo-t{font-size:13px;}
-  #main{padding:10px;}
-  .tab{padding:7px 10px;font-size:12px;}
-  .ig{grid-template-columns:80px 1fr 44px 58px 22px;gap:4px;}
-  .bt{font-size:11px;}
-  .bt th,.bt td{padding:4px 6px;}
-  .modal{padding:16px;}
-  .two{grid-template-columns:1fr;}
-  input,select,textarea{font-size:16px!important;} /* prevent iOS zoom */
-  .sr,.st{width:100%;}
-  .fr{flex-direction:column;gap:6px;}
-  .fb{min-width:unset;}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  background: var(--sand);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
 }
-/* Safe area for iPhone notch */
-#header{padding-top:max(14px,env(safe-area-inset-top));}
-body{padding-bottom:env(safe-area-inset-bottom);}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  cursor: pointer; border: none; border-radius: 7px;
+  padding: 8px 14px; font-family: var(--font); font-size: 13px; font-weight: 700;
+  transition: all .15s; text-decoration: none; white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.bg  { background: var(--green);  color: #fff; }
+.bg:hover  { background: var(--green-d); }
+.bs  { background: var(--green-l); color: #fff; }
+.bs:hover  { background: #5e7e56; }
+.bo  { background: transparent; color: var(--green); border: 1.5px solid var(--green); }
+.bo:hover  { background: var(--green); color: #fff; }
+.br  { background: var(--red-bg); color: var(--red); border: 1px solid #e0c8b8; }
+.br:hover  { background: #ead0c0; }
+.bw  { background: var(--wa); color: #fff; }
+.bw:hover  { background: #1da851; }
+.bsm { padding: 5px 10px; font-size: 12px; }
+.bxs { padding: 3px 8px;  font-size: 11px; border-radius: 5px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+
+/* ── INPUTS ── */
+input, textarea, select {
+  font-family: var(--font);
+  border: 1.5px solid #c9c0a0; border-radius: 7px;
+  padding: 8px 10px; font-size: 16px; /* 16px prevents iOS zoom */
+  background: #fff; color: var(--text); width: 100%; outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--green); }
+textarea { resize: vertical; }
+.lbl {
+  display: block; font-size: 11px; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 5px;
+}
+
+/* ── HEADER ── */
+#header {
+  background: linear-gradient(135deg, #2e5228, #3a6b35, #4a8040);
+  padding: max(14px, env(safe-area-inset-top)) 16px 0;
+  box-shadow: 0 4px 20px rgba(30,50,20,.25);
+  position: sticky; top: 0; z-index: 40;
+}
+.logo { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.logo-icon { font-size: 28px; }
+.logo-title { color: #fff; font-size: 16px; font-weight: 800; line-height: 1.2; }
+.logo-sub   { color: #a8d4a0; font-size: 11px; margin-top: 1px; font-weight: 400; }
+
+/* ── TABS ── */
+.tabs { display: flex; gap: 3px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; cursor: pointer; padding: 9px 13px;
+  border-radius: 8px 8px 0 0; font-weight: 700; font-size: 12px;
+  border: none; background: transparent; color: rgba(255,255,255,.75);
+  transition: all .15s; white-space: nowrap; font-family: var(--font);
+}
+.tab.on  { background: rgba(0,0,0,.25); color: #fff; }
+.tab:hover:not(.on) { background: rgba(255,255,255,.12); color: #fff; }
+
+/* ── MAIN ── */
+#main { padding: 14px; max-width: 860px; margin: 0 auto; padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+
+/* ── CALENDAR ── */
+.cgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.chdr  { text-align: center; font-size: 10px; font-weight: 700; color: var(--muted); padding: 3px 0; }
+.dc {
+  cursor: pointer; border-radius: 7px; padding: 5px 3px;
+  min-height: 62px; border: 1.5px solid transparent;
+  background: var(--cream); transition: all .15s;
+}
+.dc:hover  { background: #e8f0e4; border-color: #a8c89e; }
+.dc.tod    { border-color: var(--green) !important; background: var(--green-bg); }
+.dc.hv     { background: var(--sage); }
+.dc.hh     { border-color: #e8b4b4; background: #fdf0f0; }
+.dc.hv2    { border-color: #b4cce8; background: #eaf4fb; }
+.dc.hm     { border-color: #c8c8c8; background: #f2f3f4; }
+.dc-n      { font-size: 12px; margin-bottom: 2px; font-weight: 500; }
+.dc-h      { font-size: 8px; font-weight: 700; line-height: 1.1; margin-bottom: 1px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dc-c      { font-size: 8px; background: var(--green); color: #fff; border-radius: 3px; padding: 1px 3px; margin-bottom: 1px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ── LEGEND ── */
+.legend { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; font-size: 11px; align-items: center; }
+.ldot   { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-left: 4px; vertical-align: middle; }
+
+/* ── VISIT CARD ── */
+.vc  { margin-bottom: 13px; padding: 14px 15px; }
+.vh  { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+.fr  { display: flex; gap: 9px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 10px; }
+.fb  { min-width: 130px; flex: 1; }
+
+/* ── ITEM ROW ── */
+.ir  { background: #f8f5ef; border-radius: 7px; padding: 8px 9px; margin-bottom: 6px; border: 1px solid #e0d8c0; }
+.ig  { display: grid; grid-template-columns: 86px 1fr 48px 64px 24px; gap: 5px; align-items: center; }
+.ig input, .ig select { font-size: 13px; padding: 6px 8px; }
+
+/* ── AUTOCOMPLETE ── */
+.acw  { position: relative; }
+.sug  { position: absolute; top: 100%; right: 0; left: 0; background: #fff; border: 1.5px solid var(--green); border-top: none; border-radius: 0 0 7px 7px; z-index: 50; max-height: 130px; overflow-y: auto; display: none; box-shadow: 0 6px 16px rgba(0,0,0,.12); }
+.sug.show { display: block; }
+.si   { padding: 7px 10px; cursor: pointer; font-size: 13px; }
+.si:hover { background: var(--green-bg); }
+
+/* ── SUBTOTAL ── */
+.sub  { border-top: 2px solid var(--border); padding-top: 10px; margin-top: 4px; }
+.sr   { display: flex; justify-content: space-between; font-size: 13px; color: #5a5040; margin-bottom: 4px; max-width: 240px; }
+.st   { display: flex; justify-content: space-between; font-weight: 700; font-size: 15px; color: var(--green); border-top: 1px solid #c0b898; padding-top: 5px; margin-top: 3px; max-width: 240px; }
+
+/* ── TABLES ── */
+.bt  { width: 100%; border-collapse: collapse; font-size: 12px; }
+.bt th { background: var(--green); color: #fff; padding: 7px 9px; text-align: right; font-weight: 700; }
+.bt td { padding: 5px 9px; border-bottom: 1px solid #e0d8c0; vertical-align: top; }
+.bt tr:last-child td { border-bottom: none; }
+
+/* ── MODAL OVERLAY ── */
+.ov {
+  position: fixed; inset: 0; background: rgba(20,15,5,.55);
+  z-index: 100; display: flex; align-items: center; justify-content: center; padding: 14px;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+.modal {
+  background: var(--cream); border-radius: 14px;
+  width: 100%; max-width: 660px; max-height: 90vh;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  box-shadow: 0 24px 64px rgba(0,0,0,.3); padding: 22px;
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: max(26px, env(safe-area-inset-bottom, 26px));
+  left: 50%; transform: translateX(-50%);
+  background: var(--green); color: #fff;
+  padding: 9px 22px; border-radius: 30px;
+  font-weight: 700; font-size: 13px; z-index: 999;
+  box-shadow: 0 4px 18px rgba(0,0,0,.22); display: none;
+  white-space: nowrap;
+}
+
+/* ── INLINE ADD CUSTOMER ── */
+.ic  { background: var(--sage); border-radius: 8px; padding: 11px; margin-top: 7px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+
+/* ── BACKUP BAR ── */
+#bbar {
+  border-top: 1px solid var(--border); padding: 11px 14px;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center;
+  background: var(--cream); font-family: var(--font);
+}
+
+/* ── INSTALL BANNER ── */
+#install-banner {
+  display: none; margin: 12px 14px 0;
+  background: linear-gradient(135deg, #2e5228, #3a6b35);
+  border-radius: var(--radius); padding: 12px 16px;
+  align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+}
+#install-banner.show { display: flex; }
+.install-text { color: #fff; font-size: 13px; font-weight: 700; }
+.install-sub  { color: #a8d4a0; font-size: 11px; margin-top: 1px; }
+
+/* ── PRINT ── */
+@media print { #header, .tab, #bbar, #install-banner, .np { display: none !important; } }
+
+/* ── MOBILE ── */
+@media (max-width: 500px) {
+  .logo-title { font-size: 13px; }
+  .tab { padding: 8px 10px; font-size: 11px; }
+  #main { padding: 10px; }
+  .ig  { grid-template-columns: 78px 1fr 42px 56px 22px; gap: 4px; }
+  .ig input, .ig select { font-size: 12px; padding: 5px 6px; }
+  .modal { padding: 15px; }
+  .two { grid-template-columns: 1fr; }
+  .sr, .st { max-width: 100%; }
+  .fr { gap: 7px; }
+  .bt { font-size: 11px; }
+  .bt th, .bt td { padding: 4px 6px; }
+}
 </style>
 </head>
 <body>
+
 <div id="header">
   <div class="logo">
-    <div style="font-size:26px;">🌿</div>
-    <div><div class="logo-t">יומן מתן רביד גינון והשקיה</div><div class="logo-s">עוזר יומי לגנן</div></div>
+    <div class="logo-icon">🌿</div>
+    <div>
+      <div class="logo-title">יומן מתן רביד גינון והשקיה</div>
+      <div class="logo-sub">עוזר יומי לגנן</div>
+    </div>
   </div>
   <div class="tabs">
     <button class="tab" onclick="go('calendar')">📅 לוח שנה</button>
@@ -118,20 +280,32 @@ body{padding-bottom:env(safe-area-inset-bottom);}
     <button class="tab" onclick="go('customers')">👤 לקוחות</button>
   </div>
 </div>
+
+<div id="install-banner">
+  <div>
+    <div class="install-text">📱 התקן כאפליקציה על הטלפון</div>
+    <div class="install-sub">גישה מהירה ועבודה ללא אינטרנט</div>
+  </div>
+  <button class="btn bg bsm" onclick="installApp()">התקן עכשיו</button>
+  <button style="background:none;border:none;cursor:pointer;color:#a8d4a0;font-size:18px;padding:0;" onclick="document.getElementById('install-banner').classList.remove('show')">✕</button>
+</div>
+
 <div id="main"></div>
+
 <div id="bbar">
-  <span style="font-size:11px;color:#7a6e55;font-weight:700;">שמירת נתונים:</span>
+  <span style="font-size:11px;color:var(--muted);font-weight:700;">שמירת נתונים:</span>
   <button class="btn bo bsm" onclick="exportD()">💾 ייצוא גיבוי</button>
   <label class="btn bo bsm" style="cursor:pointer;">📂 טעינת גיבוי
     <input type="file" accept=".json" style="display:none;width:auto;" onchange="importD(event)">
   </label>
-  <button id="install-btn" class="btn bg bsm" style="display:none;" onclick="installApp()">📱 התקן כאפליקציה</button>
-  <span style="font-size:10px;color:#7a6e55;">(הנתונים נשמרים בדפדפן אוטומטית)</span>
-  <span id="save-status" style="font-size:11px;font-weight:700;color:#3a6b35;"></span>
+  <span id="save-status" style="font-size:11px;font-weight:700;color:var(--green);"></span>
 </div>
+
 <div id="modal-wrap"></div>
 <div id="toast"></div>
+
 <script>
+
 
 // ── CONSTANTS ──
 const MN=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
@@ -283,85 +457,4 @@ function rCal(){
     let cls='dc';
     if(isT)cls+=' tod';
     else if(hd&&hd[1]==='h')cls+=' hh';
-    else if(hd&&hd[1]==='v')cls+=' hv2';
-    else if(hd&&hd[1]==='m')cls+=' hm';
-    else if(vs.length)cls+=' hv';
-    const hc=hd?(hd[1]==='h'?'#c0392b':hd[1]==='v'?'#2980b9':'#7f8c8d'):null;
-    const nc=isT?'#3a6b35':(hc||'#2c2c1e');
-    h+='<div class="'+cls+'" onclick="goDay(\''+ds+'\')">';
-    h+='<div class="dc-n" style="font-weight:'+(isT?700:400)+';color:'+nc+';">'+d+'</div>';
-    if(hd)h+='<div class="dc-h" style="color:'+hc+';">'+e(hd[0])+'</div>';
-    const names=[...new Set(vs.map(v=>{const c=S.customers.find(c=>c.id===v.custId);return c?c.name.split(' ')[0]:'?';}))];
-    if(names[0])h+='<div class="dc-c">'+e(names[0])+'</div>';
-    if(names.length>1)h+='<div style="font-size:8px;color:#7a6e55;">+'+(names.length-1)+'</div>';
-    h+='</div>';
-  }
-  h+='</div></div>';
-  const mv=vim(UI.yr,UI.mo);
-  const rev=mv.reduce((s,v)=>s+vt(v),0);
-  if(mv.length>0){
-    h+='<div class="card" style="padding:8px 12px;margin-top:8px;font-size:13px;">';
-    h+='<span style="color:#7a6e55;">סיכום: </span><b>'+mv.length+'</b> ביקורים &nbsp;·&nbsp; ';
-    h+='<b style="color:#3a6b35;">₪'+rev.toFixed(2)+'</b> הכנסה</div>';
-  }else{
-    h+='<div class="card" style="padding:8px 12px;margin-top:8px;color:#7a6e55;font-size:12px;">אין ביקורים החודש. לחץ על יום להוספה.</div>';
-  }
-  return h;
-}
-function prevM(){if(UI.mo===0){UI.mo=11;UI.yr--;}else UI.mo--;render();}
-function nextM(){if(UI.mo===11){UI.mo=0;UI.yr++;}else UI.mo++;render();}
-function goDay(ds){UI.day=ds;go('day');}
-
-// ── DAY SHEET ──
-function rDay(){
-  let h='';
-  h+='<div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;">';
-  h+='<div style="font-size:18px;font-weight:700;color:#2e5228;">📋 יומן יומי</div>';
-  h+='<input type="date" value="'+UI.day+'" onchange="UI.day=this.value;render();" style="width:158px;">';
-  h+='<div style="font-size:12px;color:#7a6e55;">'+fdate(UI.day)+'</div></div>';
-  const vs=S.visits[UI.day]||[];
-  if(!vs.length)h+='<div class="card" style="padding:20px;text-align:center;color:#7a6e55;"><div style="font-size:26px;margin-bottom:5px;">🌱</div>אין ביקורים ביום זה.</div>';
-  vs.forEach(v=>{h+=rVisit(v,UI.day);});
-  // add visit panel
-  h+='<div class="card" style="padding:10px 13px;border:2px dashed #b8d4b0;margin-top:4px;">';
-  h+='<div class="lbl">הוסף ביקור לקוח</div>';
-  h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px;">';
-  if(!S.customers.length)h+='<div style="font-size:12px;color:#7a6e55;">אין לקוחות עדיין.</div>';
-  else S.customers.forEach(c=>{h+='<button class="btn bo bsm" onclick="addV(\''+UI.day+'\','+c.id+')">+ '+e(c.name)+'</button>';});
-  h+='</div>';
-  if(!UI.addCust){
-    h+='<button class="btn bs bsm" onclick="UI.addCust=true;render();">👤 הוסף לקוח חדש</button>';
-  }else{
-    h+='<div class="ic">';
-    h+='<div style="font-size:12px;font-weight:700;color:#2e5228;margin-bottom:6px;">לקוח חדש</div>';
-    h+='<div class="two">';
-    h+='<div><span class="lbl">שם *</span><input type="text" id="ncn" placeholder="שם"></div>';
-    h+='<div><span class="lbl">כתובת</span><input type="text" id="nca" placeholder="כתובת"></div>';
-    h+='<div><span class="lbl">טלפון</span><input type="text" id="ncp" placeholder="טלפון"></div>';
-    h+='</div>';
-    h+='<div style="display:flex;gap:6px;"><button class="btn bg bsm" onclick="addCI()">הוסף</button>';
-    h+='<button class="btn bo bsm" onclick="UI.addCust=false;render();">ביטול</button></div></div>';
-  }
-  h+='</div>';
-  return h;
-}
-
-function rVisit(v,ds){
-  const c=S.customers.find(c=>c.id===v.custId);
-  const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
-  const f2v=f2*1.18;
-  const it=(v.items||[]).reduce((s,i)=>s+(i.qty||0)*(parseFloat(i.price)||0),0);
-  const tot=f1+f2v+it;
-  let h='<div class="card vc">';
-  h+='<div class="vh">';
-  h+='<div><div style="font-size:14px;font-weight:700;color:#2e5228;">🏡 '+e(c?c.name:'לקוח לא ידוע')+'</div>';
-  h+='<div style="font-size:11px;color:#7a6e55;margin-top:1px;">📍 '+e(c?c.address:'')+'</div></div>';
-  h+='<button class="btn br bxs" onclick="delV(\''+ds+'\',\''+v.id+'\')">הסר</button></div>';
-  // notes
-  h+='<div style="margin-bottom:9px;"><span class="lbl">הערות עבודה</span>';
-  h+='<textarea rows="2" placeholder="תאר את העבודה שבוצעה..." onchange="upNotes(\''+ds+'\',\''+v.id+'\',this.value)">'+e(v.notes||'')+'</textarea></div>';
-  // fees
-  h+='<div class="fr">';
-  h+='<div class="fb"><span class="lbl">עלות ביקור 1 (₪)</span>';
-  h+='<input type="number" min="0" step="1" placeholder="הכנס עלות..." value="'+e(v.fee===''||v.fee===undefined?'':v.fee)+'" onchange="upFee(\''+ds+'\',\''+v.id+'\',\'fee\',this.value)"></div>';
-  h+='<div class="
+    else if(hd&&hd[1]==='v'
