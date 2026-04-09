@@ -276,6 +276,7 @@ function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.s
 
 function buildTabs(){
   var bar=document.getElementById('tabs');
+  if(!bar)return;
   bar.innerHTML='';
   var tabs=[['calendar','📅 לוח שנה'],['day','📋 יומן יומי'],['month','📊 חודשי'],['stats','📈 נתונים'],['customers','👤 לקוחות']];
   tabs.forEach(function(t){
@@ -294,21 +295,33 @@ function buildTabs(){
 function go(tab){V.tab=tab;V.addCust=false;V.custQ='';render();}
 
 function render(){
-  save();
-  var main=document.getElementById('main');
-  var mw=document.getElementById('mw');
-  var ss=document.getElementById('ss');
-  if(!main)return;
-  main.innerHTML = V.tab==='calendar'?rCal():
-                   V.tab==='day'?rDay():
-                   V.tab==='month'?rMonth():
-                   V.tab==='stats'?rStats():
-                   rCustomers();
-  mw.innerHTML = V.modal?rModal():'';
-  buildTabs();
-  if(ss)ss.textContent='✓ נשמר | '+S.customers.length+' לקוחות | '+allVisits().length+' ביקורים';
-  setupAC();
-  if(V.tab==='stats')loadChartsAndDraw();
+  try{
+    var main=document.getElementById('main');
+    var mw=document.getElementById('mw');
+    var ss=document.getElementById('ss');
+    if(!main)return;
+    var content;
+    try{
+      content = V.tab==='calendar'?rCal():
+                V.tab==='day'?rDay():
+                V.tab==='month'?rMonth():
+                V.tab==='stats'?rStats():
+                rCustomers();
+    }catch(viewErr){
+      content='<div style="padding:20px;color:#c0392b;background:#fdf0f0;border-radius:10px;font-size:13px;"><b>שגיאה בתצוגה:</b><br><code style="font-size:11px;white-space:pre-wrap;">'+viewErr+'</code><br><br><button class="btn bg bsm" onclick="go(\'calendar\')">חזור ללוח שנה</button></div>';
+    }
+    main.innerHTML = content;
+    mw.innerHTML = V.modal?rModal():'';
+    buildTabs();
+    if(ss)ss.textContent='✓ נשמר | '+S.customers.length+' לקוחות | '+allVisits().length+' ביקורים';
+    setupAC();
+    if(V.tab==='stats')loadChartsAndDraw();
+    save();
+  }catch(e){
+    console.error('render error:',e);
+    var m=document.getElementById('main');
+    if(m)m.innerHTML='<div style="padding:20px;color:#c0392b;background:#fdf0f0;border-radius:10px;font-size:13px;"><b>שגיאה:</b><br><code style="font-size:11px;white-space:pre-wrap;">'+e+'</code><br><br><button onclick="location.reload()" style="margin-top:10px;padding:8px 16px;background:#3a6b35;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;">רענן דף</button></div>';
+  }
 }
 
 // ════════════════════════════════════
@@ -347,22 +360,4 @@ function rCal(){
       if(names.indexOf(n)<0)names.push(n);
     });
     names.slice(0,3).forEach(function(n){h+='<div class="dc-nam">'+x(n)+'</div>';});
-    if(names.length>3)h+='<div style="font-size:7px;color:var(--mut);">+'+(names.length-3)+'</div>';
-    h+='</div>';
-  }
-  h+='</div></div>';
-  var mv=visitsInMonth(V.yr,V.mo);
-  var rev=mv.reduce(function(s,v){return s+vTotal(v);},0);
-  if(mv.length)h+='<div class="card" style="padding:9px 13px;margin-top:9px;font-size:13px;"><span style="color:var(--mut);">סיכום: </span><b>'+mv.length+'</b> ביקורים &nbsp;·&nbsp; <b style="color:var(--g);">₪'+rev.toFixed(2)+'</b> הכנסה</div>';
-  else h+='<div class="card" style="padding:9px 13px;margin-top:9px;color:var(--mut);font-size:12px;">אין ביקורים החודש. לחץ על יום.</div>';
-  return h;
-}
-function prevMo(){if(V.mo===0){V.mo=11;V.yr--;}else V.mo--;render();}
-function nextMo(){if(V.mo===11){V.mo=0;V.yr++;}else V.mo++;render();}
-function goDay(ds){V.day=ds;go('day');}
-
-// ════════════════════════════════════
-// DAY SHEET
-// ════════════════════════════════════
-function rDay(){
-  v
+    if(names.length>3)h+='<div
