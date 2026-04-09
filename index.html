@@ -2,109 +2,315 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="גינון רביד">
 <meta name="theme-color" content="#3a6b35">
-<meta name="description" content="יומן מתן רביד גינון והשקיה">
 <title>יומן מתן רביד גינון והשקיה</title>
-
-<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-
-<!-- App Icon (inline SVG as apple-touch-icon) -->
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233a6b35' width='100' height='100' rx='20'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E">
-
-<!-- PWA Manifest (inline) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-  const manifestData = {
-    name: "יומן מתן רביד גינון והשקיה",
-    short_name: "גינון רביד",
-    start_url: "./",
-    scope: "./",
-    display: "standalone",
-    background_color: "#f5f0e8",
-    theme_color: "#3a6b35",
-    orientation: "portrait-primary",
-    lang: "he",
-    icons: [{
-      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233a6b35' width='100' height='100' rx='20'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E",
-      sizes: "any",
-      type: "image/svg+xml",
-      purpose: "any maskable"
-    }]
-  };
-  const mBlob = new Blob([JSON.stringify(manifestData)], {type:'application/manifest+json'});
-  const mLink = document.createElement('link');
-  mLink.rel = 'manifest';
-  mLink.href = URL.createObjectURL(mBlob);
-  document.currentScript.after(mLink);
+const manifestData={name:"יומן מתן רביד גינון והשקיה",short_name:"גינון רביד",start_url:"./",scope:"./",display:"standalone",background_color:"#f5f0e8",theme_color:"#3a6b35",orientation:"portrait-primary",lang:"he",icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%233a6b35' width='100' height='100' rx='20'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E",sizes:"any",type:"image/svg+xml",purpose:"any maskable"}]};
+const mb=new Blob([JSON.stringify(manifestData)],{type:'application/manifest+json'});
+const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(mb);document.currentScript.after(ml);
 </script>
-
 <style>
-:root {
-  --green:    #3a6b35;
-  --green-d:  #2e5228;
-  --green-l:  #7a9e72;
-  --green-bg: #eef6eb;
-  --sage:     #f0f5ee;
-  --cream:    #fffdf7;
-  --border:   #d9d0b8;
-  --text:     #2c2c1e;
-  --muted:    #7a6e55;
-  --sand:     #f5f0e8;
-  --red:      #b5673d;
-  --red-bg:   #f5e8e0;
-  --wa:       #25D366;
-  --font:     'Heebo', Arial, sans-serif;
-  --radius:   10px;
-  --shadow:   0 2px 10px rgba(60,50,20,.09);
+:root{--g:#3a6b35;--gd:#2e5228;--gl:#7a9e72;--gbg:#eef6eb;--sage:#f0f5ee;--cream:#fffdf7;--bdr:#d9d0b8;--txt:#2c2c1e;--mut:#7a6e55;--sand:#f5f0e8;--red:#b5673d;--rbg:#f5e8e0;--wa:#25D366;--fn:'Heebo',Arial,sans-serif;--r:10px;--sh:0 2px 10px rgba(60,50,20,.09);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:var(--fn);background:var(--sand);color:var(--txt);min-height:100vh;overflow-x:hidden;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;border:none;border-radius:7px;padding:8px 14px;font-family:var(--fn);font-size:13px;font-weight:700;transition:all .15s;white-space:nowrap;}
+.btn:active{transform:scale(.97);}
+.bg{background:var(--g);color:#fff;}.bg:hover{background:var(--gd);}
+.bs{background:var(--gl);color:#fff;}.bs:hover{background:#5e7e56;}
+.bo{background:transparent;color:var(--g);border:1.5px solid var(--g);}.bo:hover{background:var(--g);color:#fff;}
+.br{background:var(--rbg);color:var(--red);border:1px solid #e0c8b8;}.br:hover{background:#ead0c0;}
+.bw{background:var(--wa);color:#fff;}.bw:hover{background:#1da851;}
+.bsm{padding:5px 10px;font-size:12px;}.bxs{padding:3px 8px;font-size:11px;border-radius:5px;}
+.card{background:var(--cream);border:1px solid var(--bdr);border-radius:var(--r);box-shadow:var(--sh);}
+input,textarea,select{font-family:var(--fn);border:1.5px solid #c9c0a0;border-radius:7px;padding:8px 10px;font-size:16px;background:#fff;color:var(--txt);width:100%;outline:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--g);}
+textarea{resize:vertical;}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:5px;}
+#hdr{background:linear-gradient(135deg,#2e5228,#3a6b35,#4a8040);padding:max(14px,env(safe-area-inset-top)) 16px 0;box-shadow:0 4px 20px rgba(30,50,20,.25);position:sticky;top:0;z-index:40;}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.logo-t{color:#fff;font-size:15px;font-weight:800;line-height:1.2;}
+.logo-s{color:#a8d4a0;font-size:10px;margin-top:1px;}
+.tabs{display:flex;gap:2px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;cursor:pointer;padding:8px 11px;border-radius:8px 8px 0 0;font-weight:700;font-size:11px;border:none;background:transparent;color:rgba(255,255,255,.75);transition:all .15s;font-family:var(--fn);}
+.tab.on{background:rgba(0,0,0,.25);color:#fff;}
+.tab:hover:not(.on){background:rgba(255,255,255,.12);color:#fff;}
+#main{padding:13px;max-width:860px;margin:0 auto;padding-bottom:max(13px,env(safe-area-inset-bottom));}
+/* CALENDAR */
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.chdr{text-align:center;font-size:10px;font-weight:700;color:var(--mut);padding:3px 0;}
+.dc{cursor:pointer;border-radius:7px;padding:4px 3px;min-height:66px;border:1.5px solid transparent;background:var(--cream);transition:all .15s;overflow:hidden;}
+.dc:hover{background:#e8f0e4;border-color:#a8c89e;}
+.dc.tod{border-color:var(--g)!important;background:var(--gbg);}
+.dc.hv{background:var(--sage);}
+.dc.hh{border-color:#e8b4b4;background:#fdf0f0;}
+.dc.hv2{border-color:#b4cce8;background:#eaf4fb;}
+.dc.hm{border-color:#c8c8c8;background:#f2f3f4;}
+.dc-n{font-size:12px;margin-bottom:2px;font-weight:500;}
+.dc-h{font-size:7px;font-weight:700;line-height:1.1;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.dc-c{font-size:7px;background:var(--g);color:#fff;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+.legend{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;font-size:10px;align-items:center;}
+.ldot{width:8px;height:8px;border-radius:3px;display:inline-block;margin-left:3px;vertical-align:middle;}
+/* VISITS */
+.vc{margin-bottom:13px;padding:14px 15px;}
+.vh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+.fr{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px;}
+.fb{min-width:125px;flex:1;}
+.ir{background:#f8f5ef;border-radius:7px;padding:8px 9px;margin-bottom:6px;border:1px solid #e0d8c0;}
+.ig{display:grid;grid-template-columns:84px 1fr 46px 62px 22px;gap:5px;align-items:center;}
+.ig input,.ig select{font-size:13px;padding:6px 7px;}
+.acw{position:relative;}
+.sug{position:absolute;top:100%;right:0;left:0;background:#fff;border:1.5px solid var(--g);border-top:none;border-radius:0 0 7px 7px;z-index:50;max-height:130px;overflow-y:auto;display:none;box-shadow:0 6px 16px rgba(0,0,0,.12);}
+.sug.show{display:block;}
+.si{padding:7px 10px;cursor:pointer;font-size:13px;}
+.si:hover{background:var(--gbg);}
+.sub{border-top:2px solid var(--bdr);padding-top:10px;margin-top:6px;}
+.sr{display:flex;justify-content:space-between;font-size:13px;color:#5a5040;margin-bottom:4px;max-width:250px;}
+.st{display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:var(--g);border-top:1px solid #c0b898;padding-top:5px;margin-top:3px;max-width:250px;}
+.bt{width:100%;border-collapse:collapse;font-size:12px;}
+.bt th{background:var(--g);color:#fff;padding:7px 9px;text-align:right;font-weight:700;}
+.bt td{padding:5px 9px;border-bottom:1px solid #e0d8c0;vertical-align:top;}
+.bt tr:last-child td{border-bottom:none;}
+.ov{position:fixed;inset:0;background:rgba(20,15,5,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+.modal{background:var(--cream);border-radius:14px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 64px rgba(0,0,0,.3);padding:22px;}
+#toast{position:fixed;bottom:max(26px,env(safe-area-inset-bottom,26px));left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:9px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;box-shadow:0 4px 18px rgba(0,0,0,.22);display:none;white-space:nowrap;}
+.ic{background:var(--sage);border-radius:8px;padding:11px;margin-top:7px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+#bbar{border-top:1px solid var(--bdr);padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;background:var(--cream);font-family:var(--fn);}
+/* CUSTOMER SEARCH */
+.csearch{position:relative;margin-bottom:8px;}
+.csearch input{font-size:14px;padding:8px 12px;}
+/* STATS */
+.stat-card{background:var(--cream);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh);}
+.stat-num{font-size:24px;font-weight:800;color:var(--g);line-height:1;}
+.stat-lbl{font-size:11px;color:var(--mut);margin-top:3px;font-weight:600;}
+.stat-sub{font-size:12px;color:var(--mut);margin-top:2px;}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+@media(min-width:500px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
+.chart-wrap{background:var(--cream);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;box-shadow:var(--sh);margin-bottom:14px;}
+.chart-title{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:10px;}
+/* INSTALL */
+#inst-banner{display:none;margin:10px 13px 0;background:linear-gradient(135deg,#2e5228,#3a6b35);border-radius:var(--r);padding:11px 15px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+#inst-banner.show{display:flex;}
+/* PRINT */
+@media print{#hdr,.tab,#bbar,#inst-banner,.np{display:none!important;}}
+/* MOBILE */
+@media(max-width:500px){
+  .logo-t{font-size:13px;}
+  .tab{padding:7px 9px;font-size:10px;}
+  #main{padding:10px;}
+  .ig{grid-template-columns:76px 1fr 40px 54px 20px;gap:3px;}
+  .ig input,.ig select{font-size:12px;padding:5px 6px;}
+  .modal{padding:15px;}
+  .two{grid-template-columns:1fr;}
+  .sr,.st{max-width:100%;}
+  .bt{font-size:11px;}
+  .bt th,.bt td{padding:4px 6px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font);
-  background: var(--sand);
-  color: var(--text);
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow-x: hidden;
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="logo">
+    <div style="font-size:26px;">🌿</div>
+    <div><div class="logo-t">יומן מתן רביד גינון והשקיה</div><div class="logo-s">עוזר יומי לגנן</div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab" onclick="go('calendar')">📅 לוח שנה</button>
+    <button class="tab" onclick="go('day')">📋 יומן יומי</button>
+    <button class="tab" onclick="go('month')">📊 חודשי</button>
+    <button class="tab" onclick="go('stats')">📈 נתונים</button>
+    <button class="tab" onclick="go('customers')">👤 לקוחות</button>
+  </div>
+</div>
+<div id="inst-banner">
+  <div><div style="color:#fff;font-size:13px;font-weight:700;">📱 התקן כאפליקציה</div><div style="color:#a8d4a0;font-size:11px;">גישה מהירה ועבודה ללא אינטרנט</div></div>
+  <button class="btn bg bsm" onclick="installApp()">התקן עכשיו</button>
+  <button style="background:none;border:none;cursor:pointer;color:#a8d4a0;font-size:18px;" onclick="document.getElementById('inst-banner').classList.remove('show')">✕</button>
+</div>
+<div id="main"></div>
+<div id="bbar">
+  <span style="font-size:11px;color:var(--mut);font-weight:700;">שמירת נתונים:</span>
+  <button class="btn bo bsm" onclick="exportD()">💾 ייצוא גיבוי</button>
+  <label class="btn bo bsm" style="cursor:pointer;">📂 טעינת גיבוי<input type="file" accept=".json" style="display:none;width:auto;" onchange="importD(event)"></label>
+  <span id="save-status" style="font-size:11px;font-weight:700;color:var(--g);"></span>
+</div>
+<div id="modal-wrap"></div>
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
+const MN=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const DY=["א'","ב'","ג'","ד'","ה'","ו'","ש'"];
+const PS=['כוסית','עציץ 12','גודל 4','10 ליטר','25 ליטר','50 ליטר','70 ליטר'];
+const FR=['דשן למשאבת דישון','דישון לדשא','דישון לעצים','אחר'];
+const CT=['צמחים','דשן','ריסוס','אחר'];
+const SK='gardener_v4';
+
+// ══════════════════════════════════════════════
+// HOLIDAYS
+// ══════════════════════════════════════════════
+const HL={
+'2024-10-02':['ראש השנה','h'],'2024-10-03':["ב' ר\"ה",'h'],
+'2024-10-11':['ערב יוה"כ','h'],'2024-10-12':['יום כיפור','h'],
+'2024-10-16':['סוכות','h'],'2024-10-17':['סוכות','v'],'2024-10-18':['חוה"מ','v'],
+'2024-10-19':['חוה"מ','v'],'2024-10-20':['חוה"מ','v'],'2024-10-21':['חוה"מ','v'],
+'2024-10-23':['שמיני עצרת','h'],'2024-10-24':['שמחת תורה','h'],
+'2024-12-25':['חנוכה','h'],'2024-12-26':['חנוכה','v'],'2024-12-27':['חנוכה','v'],
+'2024-12-28':['חנוכה','v'],'2024-12-29':['חנוכה','v'],'2024-12-30':['חנוכה','v'],
+'2024-12-31':['חנוכה','v'],'2025-01-01':['חנוכה','v'],'2025-01-02':['חנוכה','h'],
+'2025-02-13':['ט"ו בשבט','h'],'2025-03-13':['תענית אסתר','h'],'2025-03-14':['פורים','h'],
+'2025-04-12':['ערב פסח','h'],'2025-04-13':['פסח','h'],'2025-04-14':['פסח','v'],
+'2025-04-15':['חוה"מ','v'],'2025-04-16':['חוה"מ','v'],'2025-04-17':['חוה"מ','v'],
+'2025-04-18':['חוה"מ','v'],'2025-04-19':['חוה"מ','v'],'2025-04-20':['שביעי פסח','h'],
+'2025-04-27':['יום השואה','m'],'2025-04-30':['יום הזיכרון','m'],'2025-05-01':['יום העצמאות','h'],
+'2025-05-26':['ל"ג בעומר','h'],'2025-06-01':['ערב שבועות','h'],'2025-06-02':['שבועות','h'],
+'2025-06-03':['שבועות','v'],'2025-08-12':['תשעה באב','h'],
+'2025-09-22':['ראש השנה','h'],'2025-09-23':["ב' ר\"ה",'h'],'2025-09-24':['צום גדליה','h'],
+'2025-10-01':['ערב יוה"כ','h'],'2025-10-02':['יום כיפור','h'],
+'2025-10-06':['סוכות','h'],'2025-10-07':['סוכות','v'],'2025-10-08':['חוה"מ','v'],
+'2025-10-09':['חוה"מ','v'],'2025-10-10':['חוה"מ','v'],'2025-10-11':['חוה"מ','v'],
+'2025-10-12':['חוה"מ','v'],'2025-10-13':['שמיני עצרת','h'],'2025-10-14':['שמחת תורה','h'],
+'2025-12-14':['חנוכה','h'],'2025-12-15':['חנוכה','v'],'2025-12-16':['חנוכה','v'],
+'2025-12-17':['חנוכה','v'],'2025-12-18':['חנוכה','v'],'2025-12-19':['חנוכה','v'],
+'2025-12-20':['חנוכה','v'],'2025-12-21':['חנוכה','v'],'2025-12-22':['חנוכה','h'],
+'2026-02-01':['ט"ו בשבט','h'],'2026-03-02':['פורים','h'],'2026-03-03':['שושן פורים','h'],
+'2026-03-29':['ערב פסח','h'],'2026-03-30':['פסח','h'],'2026-03-31':['פסח','v'],
+'2026-04-01':['חוה"מ','v'],'2026-04-02':['חוה"מ','v'],'2026-04-03':['חוה"מ','v'],
+'2026-04-04':['חוה"מ','v'],'2026-04-05':['חוה"מ','v'],'2026-04-06':['שביעי פסח','h'],
+'2026-04-16':['יום השואה','m'],'2026-04-22':['יום הזיכרון','m'],'2026-04-23':['יום העצמאות','h'],
+'2026-05-14':['ל"ג בעומר','h'],'2026-05-21':['ערב שבועות','h'],'2026-05-22':['שבועות','h'],
+'2026-05-23':['שבועות','v'],'2026-07-23':['תשעה באב','h'],
+};
+for(let d=1;d<=31;d++){HL['2025-07-'+String(d).padStart(2,'0')]=['חופש קיץ','v'];if(d!==12)HL['2025-08-'+String(d).padStart(2,'0')]=['חופש קיץ','v'];}
+for(let d=1;d<=31;d++){HL['2026-07-'+String(d).padStart(2,'0')]=['חופש קיץ','v'];HL['2026-08-'+String(d).padStart(2,'0')]=['חופש קיץ','v'];}
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let S={customers:[],visits:{},savedPlants:[],nextId:1};
+let UI={view:'calendar',yr:new Date().getFullYear(),mo:new Date().getMonth(),
+        day:new Date().toISOString().slice(0,10),modal:null,addCust:false,billData:null,
+        custSearch:'',statsRange:'month'};
+
+// ══════════════════════════════════════════════
+// PERSISTENCE
+// ══════════════════════════════════════════════
+function save(){
+  try{
+    const j=JSON.stringify(S);
+    localStorage.setItem(SK,j);
+    localStorage.setItem(SK+'_bak',j);
+  }catch(e){console.error(e);}
+}
+function loadS(){
+  try{
+    let r=localStorage.getItem(SK)||localStorage.getItem(SK+'_bak');
+    if(r){const p=JSON.parse(r);if(p&&Array.isArray(p.customers)){S=p;return;}}
+  }catch(e){}
+}
+function exportD(){
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='gardener-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+  toast('גיבוי הורד ✓');
+}
+function importD(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p&&Array.isArray(p.customers)){S=p;save();render();toast('נתונים שוחזרו ✓');}else toast('קובץ לא תקין');}catch{toast('שגיאה בקריאת הקובץ');}};
+  r.readAsText(f);ev.target.value='';
 }
 
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-  cursor: pointer; border: none; border-radius: 7px;
-  padding: 8px 14px; font-family: var(--font); font-size: 13px; font-weight: 700;
-  transition: all .15s; text-decoration: none; white-space: nowrap;
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function dkey(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+function dim(y,m){return new Date(y,m+1,0).getDate();}
+function fd1(y,m){return new Date(y,m,1).getDay();}
+function fdate(s){const[y,m,d]=s.split('-').map(Number);return DY[new Date(y,m-1,d).getDay()]+' '+d+' '+MN[m-1]+' '+y;}
+function hol(ds){return HL[ds]||null;}
+function vt(v){
+  const f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+  return f1+(f2*1.18)+(v.items||[]).reduce((s,it)=>s+(it.qty||0)*(parseFloat(it.price)||0),0);
 }
-.btn:active { transform: scale(.97); }
-.bg  { background: var(--green);  color: #fff; }
-.bg:hover  { background: var(--green-d); }
-.bs  { background: var(--green-l); color: #fff; }
-.bs:hover  { background: #5e7e56; }
-.bo  { background: transparent; color: var(--green); border: 1.5px solid var(--green); }
-.bo:hover  { background: var(--green); color: #fff; }
-.br  { background: var(--red-bg); color: var(--red); border: 1px solid #e0c8b8; }
-.br:hover  { background: #ead0c0; }
-.bw  { background: var(--wa); color: #fff; }
-.bw:hover  { background: #1da851; }
-.bsm { padding: 5px 10px; font-size: 12px; }
-.bxs { padding: 3px 8px;  font-size: 11px; border-radius: 5px; }
-
-/* ── CARD ── */
-.card {
-  background: var(--cream); border: 1px solid var(--border);
-  border-radius: var(--radius); box-shadow: var(--shadow);
+function ni(){return {id:Date.now()+'_'+Math.random().toString(36).slice(2),cat:'צמחים',name:'',size:'כוסית',qty:1,price:''};}
+function vim(y,m){
+  const mk=y+'-'+String(m+1).padStart(2,'0');
+  return Object.entries(S.visits).filter(([k])=>k.startsWith(mk)).flatMap(([k,vs])=>vs.map(v=>({...v,date:k})));
+}
+function allVisits(){return Object.entries(S.visits).flatMap(([k,vs])=>vs.map(v=>({...v,date:k})));}
+function fv(ds,vid){return(S.visits[ds]||[]).find(v=>v.id===vid);}
+function fi(ds,vid,iid){const v=fv(ds,vid);return v?(v.items||[]).find(i=>i.id===iid):null;}
+// sort customers by visit frequency
+function sortedCustomers(q){
+  const counts={};
+  Object.values(S.visits).flat().forEach(v=>{if(v.custId)counts[v.custId]=(counts[v.custId]||0)+1;});
+  return S.customers
+    .filter(c=>!q||c.name.includes(q)||c.address.includes(q)||c.phone.includes(q))
+    .sort((a,b)=>(counts[b.id]||0)-(counts[a.id]||0));
+}
+// get last fee for a customer
+function lastFee(custId){
+  const vs=allVisits().filter(v=>v.custId===custId).sort((a,b)=>b.date.localeCompare(a.date));
+  if(vs.length){return {fee:vs[0].fee||'',fee2:vs[0].fee2||''};}
+  const c=S.customers.find(c=>c.id===custId);
+  return {fee:c?.defaultFee||'',fee2:''};
 }
 
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+let tt=null;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';if(tt)clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2500);}
+
+// ══════════════════════════════════════════════
+// RENDER ENGINE
+// ══════════════════════════════════════════════
+function go(v){UI.view=v;UI.addCust=false;UI.custSearch='';render();}
+function upTabs(){document.querySelectorAll('.tab').forEach(t=>{const m=t.getAttribute('onclick').match(/'([^']+)'/);t.classList.toggle('on',m&&m[1]===UI.view);});}
+function render(){
+  save();
+  document.getElementById('main').innerHTML=rv();
+  document.getElementById('modal-wrap').innerHTML=UI.modal?rm():'';
+  upTabs();setupAC();
+  const el=document.getElementById('save-status');
+  if(el)el.textContent='✓ נשמר | '+S.customers.length+' לקוחות | '+Object.values(S.visits).flat().length+' ביקורים';
+  if(UI.view==='stats')drawCharts();
+}
+
+// ══════════════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════════════
+function rv(){
+  if(UI.view==='calendar')return rCal();
+  if(UI.view==='day')return rDay();
+  if(UI.view==='month')return rMon();
+  if(UI.view==='stats')return rStats();
+  return rCust();
+}
+function rCal(){
+  const ts=new Date().toISOString().slice(0,10);
+  let h='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+  h+='<button class="btn bo bsm" onclick="prevM()">← הקודם</button>';
+  h+='<div style="font-size:17px;font-weight:700;color:var(--g);">'+MN[UI.mo]+' '+UI.yr+'</div>';
+  h+='<button class="btn bo bsm" onclick="nextM()">הבא →</button></div>';
+  h+='<div class="legend"><span class="ldot" style="background:#c0392b;"></span>חג <span class="ldot" style="background:#2980b9;"></span>חופשה <span class="ldot" style="background:#7f8c8d;"></spa
 /* ── INPUTS ── */
 input, textarea, select {
   font-family: var(--font);
