@@ -111,6 +111,9 @@ textarea{resize:vertical}
 <div id="mw"></div>
 <div id="toast"></div>
 <script>
+var _dbg = document.getElementById("main");
+if(_dbg) _dbg.innerHTML = "<div style='padding:20px;font-size:14px;color:green'>&#9654; Script started...</div>";
+
 var MN=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
 var DW=["א'","ב'","ג'","ד'","ה'","ו'","ש'"];
 var SZ=["כוסית","עציץ 12","גודל 4","10 ליטר","25 ליטר","50 ליטר","70 ליטר"];
@@ -354,6 +357,4 @@ function rCal(){
     h+="</div>";
   }
   h+="</div></div>";
-  var mv=vim(V.yr,V.mo),rev=mv.reduce(function(s,v){return s+vt(v)},0);
-  h+=mv.length
-    ?'<div class="card" style="padding:9px 13px;margin-top:9px;font-size:13px"><span style="color:var
+  var mv=vim(V.yr,V.mo),rev=m
