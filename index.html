@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="גינון רביד">
+<meta name="theme-color" content="#3a6b35">
+<title>יומן מתן רביד גינון והשקיה</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#3a6b35;--gd:#2e5228;--gl:#7a9e72;--gbg:#eef6eb;--cream:#fffdf7;--sand:#f5f0e8;--bdr:#d9d0b8;--mut:#7a6e55;--red:#b5673d;--rbg:#f5e8e0;--wa:#25D366}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Heebo",Arial,sans-serif;background:var(--sand);color:#2c2c1e;min-height:100vh}
+.btn{display:inline-flex;align-items:center;cursor:pointer;border:none;border-radius:7px;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:700;transition:all .15s;white-space:nowrap;gap:4px}
+.bg{background:var(--g);color:#fff}.bg:hover{background:var(--gd)}
+.bs{background:var(--gl);color:#fff}
+.bo{background:transparent;color:var(--g);border:1.5px solid var(--g)}.bo:hover{background:var(--g);color:#fff}
+.br{background:var(--rbg);color:var(--red);border:1px solid #e0c8b8}
+.bw{background:var(--wa);color:#fff}
+.bsm{padding:5px 10px;font-size:12px}.bxs{padding:3px 8px;font-size:11px;border-radius:5px}
+.card{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;box-shadow:0 2px 8px rgba(60,50,20,.08)}
+input,textarea,select{font-family:inherit;border:1.5px solid #c9c0a0;border-radius:7px;padding:8px 10px;font-size:16px;background:#fff;color:#2c2c1e;width:100%;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--g)}
+textarea{resize:vertical}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+#hdr{background:linear-gradient(135deg,#2e5228,#3a6b35,#4a8040);padding:14px 16px 0;position:sticky;top:0;z-index:40}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.logo-t{color:#fff;font-size:15px;font-weight:800}
+.logo-s{color:#a8d4a0;font-size:10px;margin-top:1px}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;cursor:pointer;padding:9px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:12px;border:none;background:transparent;color:rgba(255,255,255,.7);font-family:inherit}
+.tab.on{background:rgba(0,0,0,.25);color:#fff}
+.tab:hover:not(.on){background:rgba(255,255,255,.15);color:#fff}
+#main{padding:14px;max-width:860px;margin:0 auto}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.chdr{text-align:center;font-size:10px;font-weight:700;color:var(--mut);padding:3px 0}
+.dc{cursor:pointer;border-radius:7px;padding:4px 3px;min-height:66px;border:1.5px solid transparent;background:var(--cream);overflow:hidden}
+.dc:hover{background:#e8f0e4;border-color:#a8c89e}
+.dc.tod{border-color:var(--g)!important;background:var(--gbg)}
+.dc.hag{border-color:#e8b4b4;background:#fdf0f0}
+.dc.chof{border-color:#b4cce8;background:#eaf4fb}
+.dc.zik{border-color:#c8c8c8;background:#f2f3f4}
+.dc.vist{background:#f0f5ee}
+.dc-n{font-size:12px;font-weight:500;margin-bottom:2px}
+.dc-h{font-size:7px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-bottom:1px}
+.dc-c{font-size:7px;background:var(--g);color:#fff;border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.vc{margin-bottom:13px;padding:14px 15px}
+.fr{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px}
+.fb{min-width:125px;flex:1}
+.ir{background:#f8f5ef;border-radius:7px;padding:8px;margin-bottom:6px;border:1px solid #e0d8c0}
+.ig{display:grid;grid-template-columns:84px 1fr 46px 62px 24px;gap:5px;align-items:center}
+.ig input,.ig select{font-size:13px;padding:6px 7px}
+.acw{position:relative}
+.sug{position:absolute;top:100%;right:0;left:0;background:#fff;border:1.5px solid var(--g);border-top:none;border-radius:0 0 7px 7px;z-index:50;max-height:120px;overflow-y:auto;display:none}
+.sug.open{display:block}
+.si{padding:7px 10px;cursor:pointer;font-size:13px}.si:hover{background:var(--gbg)}
+.sub{border-top:2px solid var(--bdr);padding-top:9px;margin-top:6px}
+.sr{display:flex;justify-content:space-between;font-size:13px;color:#5a5040;margin-bottom:3px;max-width:240px}
+.st{display:flex;justify-content:space-between;font-weight:700;font-size:15px;color:var(--g);border-top:1px solid #c0b898;padding-top:4px;margin-top:2px;max-width:240px}
+.bt{width:100%;border-collapse:collapse;font-size:12px}
+.bt th{background:var(--g);color:#fff;padding:7px 9px;text-align:right;font-weight:700}
+.bt td{padding:5px 9px;border-bottom:1px solid #e0d8c0;vertical-align:top}
+.bt tr:last-child td{border-bottom:none}
+.ov{position:fixed;inset:0;background:rgba(10,10,5,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:14px}
+.modal{background:var(--cream);border-radius:14px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 60px rgba(0,0,0,.3);padding:22px}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:9px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;display:none}
+.ic{background:#f0f5ee;border-radius:8px;padding:11px;margin-top:7px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+#bbar{border-top:1px solid var(--bdr);padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;background:var(--cream)}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media(min-width:480px){.sg{grid-template-columns:repeat(4,1fr)}}
+.sc{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;padding:13px 15px}
+.sn{font-size:21px;font-weight:800;color:var(--g)}
+.sl{font-size:11px;color:var(--mut);margin-top:2px;font-weight:600}
+.ss2{font-size:11px;color:var(--mut);margin-top:2px}
+.cw{background:var(--cream);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:14px}
+.ct{font-size:13px;font-weight:700;margin-bottom:10px}
+.wt{font-size:10px;background:#e8d8f0;color:#6a3d8f;border-radius:4px;padding:1px 5px;margin-right:4px}
+@media print{#hdr,.tab,#bbar,.np{display:none!important}}
+@media(max-width:480px){
+  .logo-t{font-size:13px}#main{padding:10px}.modal{padding:15px}
+  .ig{grid-template-columns:76px 1fr 42px 54px 20px;gap:3px}.ig input,.ig select{font-size:12px;padding:5px 6px}
+  .two{grid-template-columns:1fr}.sr,.st{max-width:100%}.bt{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="logo">
+    <div style="font-size:26px">&#127807;</div>
+    <div>
+      <div class="logo-t">יומן מתן רביד גינון והשקיה</div>
+      <div class="logo-s">עוזר יומי לגנן</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</div>
+<div id="main"><div style="padding:40px;text-align:center;color:var(--g)">&#9203; טוען...</div></div>
+<div id="bbar">
+  <span style="font-size:11px;font-weight:700;color:var(--mut)">שמירת נתונים:</span>
+  <button class="btn bo bsm" data-action="exportD">&#128190; ייצוא גיבוי</button>
+  <label class="btn bo bsm" style="cursor:pointer">&#128194; טעינת גיבוי
+    <input type="file" accept=".json" style="display:none;width:auto" onchange="importD(event)">
+  </label>
+  <span id="ss" style="font-size:11px;font-weight:700;color:var(--g)"></span>
+</div>
+<div id="mw"></div>
+<div id="toast"></div>
+<script>
+var MN=["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+var DW=["א'","ב'","ג'","ד'","ה'","ו'","ש'"];
+var SZ=["כוסית","עציץ 12","גודל 4","10 ליטר","25 ליטר","50 ליטר","70 ליטר"];
+var FR=["דשן למשאבת דישון","דישון לדשא","דישון לעצים","אחר"];
+var CT=["צמחים","דשן","ריסוס","אחר"];
+var HL={};
+(function(){
+  var h=[
+    ["2024-10-02","ראש השנה","h"],["2024-10-12","יום כיפור","h"],
+    ["2024-10-16","סוכות","h"],["2024-10-17","סוכות","v"],
+    ["2024-10-18","חוה\"מ","v"],["2024-10-19","חוה\"מ","v"],["2024-10-20","חוה\"מ","v"],["2024-10-21","חוה\"מ","v"],
+    ["2024-10-23","שמיני עצרת","h"],["2024-10-24","שמחת תורה","h"],
+    ["2024-12-25","חנוכה","h"],["2024-12-26","חנוכה","v"],["2024-12-27","חנוכה","v"],
+    ["2024-12-28","חנוכה","v"],["2024-12-29","חנוכה","v"],["2024-12-30","חנוכה","v"],
+    ["2024-12-31","חנוכה","v"],["2025-01-01","חנוכה","v"],["2025-01-02","חנוכה","h"],
+    ["2025-03-14","פורים","h"],
+    ["2025-04-13","פסח","h"],["2025-04-14","פסח","v"],
+    ["2025-04-15","חוה\"מ פסח","v"],["2025-04-16","חוה\"מ פסח","v"],
+    ["2025-04-17","חוה\"מ פסח","v"],["2025-04-18","חוה\"מ פסח","v"],
+    ["2025-04-19","חוה\"מ פסח","v"],["2025-04-20","שביעי פסח","h"],
+    ["2025-04-27","יום השואה","m"],["2025-04-30","יום הזיכרון","m"],["2025-05-01","יום העצמאות","h"],
+    ["2025-06-02","שבועות","h"],["2025-06-03","שבועות","v"],["2025-08-12","תשעה באב","h"],
+    ["2025-09-22","ראש השנה","h"],["2025-09-23","ב' ראש השנה","h"],["2025-10-02","יום כיפור","h"],
+    ["2025-10-06","סוכות","h"],["2025-10-07","סוכות","v"],
+    ["2025-10-08","חוה\"מ","v"],["2025-10-09","חוה\"מ","v"],["2025-10-10","חוה\"מ","v"],["2025-10-11","חוה\"מ","v"],["2025-10-12","חוה\"מ","v"],
+    ["2025-10-13","שמיני עצרת","h"],["2025-10-14","שמחת תורה","h"],
+    ["2025-12-14","חנוכה","h"],["2025-12-15","חנוכה","v"],["2025-12-16","חנוכה","v"],
+    ["2025-12-17","חנוכה","v"],["2025-12-18","חנוכה","v"],["2025-12-19","חנוכה","v"],
+    ["2025-12-20","חנוכה","v"],["2025-12-21","חנוכה","v"],["2025-12-22","חנוכה","h"],
+    ["2026-03-02","פורים","h"],
+    ["2026-03-30","פסח","h"],["2026-03-31","פסח","v"],
+    ["2026-04-01","חוה\"מ פסח","v"],["2026-04-02","חוה\"מ פסח","v"],
+    ["2026-04-03","חוה\"מ פסח","v"],["2026-04-04","חוה\"מ פסח","v"],
+    ["2026-04-05","חוה\"מ פסח","v"],["2026-04-06","שביעי פסח","h"],
+    ["2026-04-16","יום השואה","m"],["2026-04-22","יום הזיכרון","m"],["2026-04-23","יום העצמאות","h"],
+    ["2026-05-22","שבועות","h"],["2026-05-23","שבועות","v"],["2026-07-23","תשעה באב","h"]
+  ];
+  h.forEach(function(x){HL[x[0]]=[x[1],x[2]]});
+  for(var d=1;d<=31;d++){
+    var p=("0"+d).slice(-2);
+    HL["2025-07-"+p]=["חופש קיץ","v"];
+    if(d!==12)HL["2025-08-"+p]=["חופש קיץ","v"];
+    HL["2026-07-"+p]=["חופש קיץ","v"];
+    HL["2026-08-"+p]=["חופש קיץ","v"];
+  }
+})();
+
+var S={customers:[],visits:{},plants:[],nextId:1};
+var V={tab:"calendar",yr:new Date().getFullYear(),mo:new Date().getMonth(),
+       day:new Date().toISOString().slice(0,10),modal:null,addCust:false,
+       custQ:"",editId:null,billData:null};
+
+function xe(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function pad(n){return n<10?"0"+n:""+n}
+function dkey(y,m,d){return y+"-"+pad(m+1)+"-"+pad(d)}
+function dim(y,m){return new Date(y,m+1,0).getDate()}
+function fd1(y,m){return new Date(y,m,1).getDay()}
+function fdate(s){var a=s.split("-").map(Number);return DW[new Date(a[0],a[1]-1,a[2]).getDay()]+" "+a[2]+" "+MN[a[1]-1]+" "+a[0]}
+function vt(v){
+  var f1=parseFloat(v.fee)||0,f2=parseFloat(v.fee2)||0;
+  return f1+f2*1.18+(v.items||[]).reduce(function(s,it){return s+(it.qty||0)*(parseFloat(it.price)||0)},0);
+}
+function vim(y,m){
+  var mk=y+"-"+pad(m+1),out=[];
+  Object.keys(S.visits).forEach(function(k){
+    if(k.indexOf(mk)===0)S.visits[k].forEach(function(v){out.push(Object.assign({},v,{date:k}))});
+  });
+  return out;
+}
+function avAll(){
+  var out=[];
+  Object.keys(S.visits).forEach(function(k){
+    S.visits[k].forEach(function(v){out.push(Object.assign({},v,{date:k}))});
+  });
+  return out;
+}
+function fv(ds,vid){return(S.visits[ds]||[]).find(function(v){return v.id===vid})}
+function fi(ds,vid,iid){var v=fv(ds,vid);return v?(v.items||[]).find(function(i){return i.id===iid}):null}
+function lastFee(cid){
+  var vs=avAll().filter(function(v){return v.custId===cid}).sort(function(a,b){return b.date.localeCompare(a.date)});
+  if(vs.length)return{fee:vs[0].fee!==undefined?vs[0].fee:"",fee2:vs[0].fee2!==undefined?vs[0].fee2:""};
+  var c=S.customers.find(function(c){return c.id===cid});
+  return{fee:c&&c.defaultFee!==undefined?c.defaultFee:"",fee2:""};
+}
+function sortC(q){
+  var cnt={};avAll().forEach(function(v){if(v.custId)cnt[v.custId]=(cnt[v.custId]||0)+1});
+  return S.customers
+    .filter(function(c){return !q||c.name.indexOf(q)>=0||c.address.indexOf(q)>=0||c.phone.indexOf(q)>=0})
+    .sort(function(a,b){return(cnt[b.id]||0)-(cnt[a.id]||0)});
+}
+function ni(){return{id:Date.now()+"_"+Math.random().toString(36).slice(2),cat:"צמחים",name:"",size:"כוסית",qty:1,price:""}}
+
+var SK="gv5";
+function save(){try{var j=JSON.stringify(S);localStorage.setItem(SK,j);localStorage.setItem(SK+"_b",j)}catch(e){}}
+function loadData(){
+  var keys=[SK,SK+"_b","gardener_MASTER","gardener_MASTER_bak","gardener_v4","gardener_v3"];
+  for(var i=0;i<keys.length;i++){
+    try{
+      var r=localStorage.getItem(keys[i]);
+      if(r){var p=JSON.parse(r);if(p&&Array.isArray(p.customers)){S=p;if(!S.plants)S.plants=[];save();return}}
+    }catch(e){}
+  }
+}
+function exportD(){
+  var b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+  var u=URL.createObjectURL(b),a=document.createElement("a");
+  a.href=u;a.download="backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);
+  toast("גיבוי הורד \u2713");
+}
+function importD(ev){
+  var f=ev.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    try{var p=JSON.parse(e.target.result);if(p&&Array.isArray(p.customers)){S=p;if(!S.plants)S.plants=[];save();render();toast("שוחזר \u2713")}}
+    catch(x){toast("שגיאה")}
+  };
+  r.readAsText(f);ev.target.value="";
+}
+
+var _tt=null;
+function toast(msg){var t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.style.display="block";clearTimeout(_tt);_tt=setTimeout(function(){t.style.display="none"},2500)}
+
+function go(tab){V.tab=tab;V.addCust=false;V.custQ="";render()}
+
+// ─── EVENT DELEGATION ─────────────────────────────────────────
+// All generated HTML uses data-action + data-* attributes only.
+// NO inline JS strings in generated HTML whatsoever.
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-action]");
+  if(!el)return;
+  var a=el.dataset;
+  switch(a.action){
+    case "go":       go(a.tab);break;
+    case "prevMo":   prevMo();break;
+    case "nextMo":   nextMo();break;
+    case "goDay":    goDay(a.ds);break;
+    case "addVisit": addVisit(a.ds,+a.cid);break;
+    case "addWalkin":addWalkin(a.ds);break;
+    case "delVisit": delVisit(a.ds,a.vid);break;
+    case "addItem":  addItem(a.ds,a.vid);break;
+    case "delItem":  delItem(a.ds,a.vid,a.iid);break;
+    case "addCI":    addCI();break;
+    case "showAddCust": V.addCust=true;render();break;
+    case "hideAddCust": V.addCust=false;render();break;
+    case "openMod":  openMod(a.modal,a.id!==undefined?+a.id:null);break;
+    case "closeMod": closeMod();break;
+    case "addCM":    addCM();break;
+    case "saveC":    saveC(+a.id);break;
+    case "delC":     if(confirm("למחוק?")){S.customers=S.customers.filter(function(c){return c.id!==+a.id});save();render();toast("הוסר")}break;
+    case "showBill": showBill(el);break;
+    case "sendWA":   sendWA(el);break;
+    case "copyAll":  copyAll();break;
+    case "sendAll":  sendAll();break;
+    case "copyBill": copyBill();break;
+    case "waBill":   waBill();break;
+    case "print":    window.print();break;
+    case "closeOv":  if(e.target===el)closeMod();break;
+  }
+});
+document.addEventListener("change",function(e){
+  var el=e.target,a=el.dataset;
+  switch(a.action){
+    case "chDate":  V.day=el.value;render();break;
+    case "pvN":     var v=fv(a.ds,a.vid);if(v){v.notes=el.value;save()}break;
+    case "sf1":     sf1(a.ds,a.vid,a.cid,el.value);break;
+    case "sf2":     sf2(a.ds,a.vid,el.value);break;
+    case "chCat":   chCat(a.ds,a.vid,a.iid,el.value);break;
+    case "piName":  piF(a.ds,a.vid,a.iid,"name",el.value);break;
+    case "piQty":   piF(a.ds,a.vid,a.iid,"qty",el.value);break;
+    case "piPrice": piF(a.ds,a.vid,a.iid,"price",el.value);break;
+    case "piSize":  piF(a.ds,a.vid,a.iid,"size",el.value);break;
+    case "piNameTx":piF(a.ds,a.vid,a.iid,"name",el.value);break;
+  }
+});
+document.addEventListener("input",function(e){
+  var el=e.target,a=el.dataset;
+  if(a.action==="srchCust"){V.custQ=el.value;render()}
+  if(el.classList.contains("pi"))acInput(el);
+});
+
+function render(){
+  var main=document.getElementById("main"),mw=document.getElementById("mw");
+  if(!main||!mw)return;
+  if(V.tab==="calendar")main.innerHTML=rCal();
+  else if(V.tab==="day")main.innerHTML=rDay();
+  else if(V.tab==="month")main.innerHTML=rMon();
+  else if(V.tab==="stats")main.innerHTML=rStat();
+  else main.innerHTML=rCust();
+  mw.innerHTML=V.modal?rMod():"";
+  var bar=document.getElementById("tabs");
+  if(bar){
+    bar.innerHTML="";
+    [["calendar","&#128197; לוח שנה"],["day","&#128203; יומן יומי"],
+     ["month","&#128202; חודשי"],["stats","&#128200; נתונים"],["customers","&#128100; לקוחות"]]
+    .forEach(function(t){
+      var b=document.createElement("button");
+      b.className="tab"+(V.tab===t[0]?" on":"");
+      b.innerHTML=t[1];
+      b.setAttribute("data-action","go");
+      b.setAttribute("data-tab",t[0]);
+      bar.appendChild(b);
+    });
+  }
+  var ss=document.getElementById("ss");
+  if(ss)ss.textContent="\u2713 נשמר | "+S.customers.length+" לקוחות | "+avAll().length+" ביקורים";
+  setupAC();
+  if(V.tab==="stats")drawCharts();
+  save();
+}
+
+// ─── CALENDAR ──────────────────────────────────────────────────
+function rCal(){
+  var ts=new Date().toISOString().slice(0,10),h="";
+  h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
+  h+='<button class="btn bo bsm" data-action="prevMo">&#8592; הקודם</button>';
+  h+='<b style="font-size:17px;color:var(--g)">'+MN[V.mo]+" "+V.yr+'</b>';
+  h+='<button class="btn bo bsm" data-action="nextMo">הבא &#8594;</button></div>';
+  h+='<div style="display:flex;gap:10px;margin-bottom:8px;font-size:10px"><span>&#128308; חג</span><span>&#128309; חופשה</span><span>&#9899; זיכרון</span></div>';
+  h+='<div class="card" style="padding:10px"><div class="cgrid" style="margin-bottom:3px">';
+  DW.forEach(function(d){h+='<div class="chdr">'+d+"</div>"});
+  h+='</div><div class="cgrid">';
+  for(var i=0;i<fd1(V.yr,V.mo);i++)h+="<div></div>";
+  for(var d=1;d<=dim(V.yr,V.mo);d++){
+    var ds=dkey(V.yr,V.mo,d),vs=S.visits[ds]||[],hd=HL[ds],isT=ds===ts;
+    var cls="dc";
+    if(isT)cls+=" tod";
+    else if(hd){if(hd[1]==="h")cls+=" hag";else if(hd[1]==="v")cls+=" chof";else cls+=" zik"}
+    else if(vs.length)cls+=" vist";
+    var hc=hd?(hd[1]==="h"?"#c0392b":hd[1]==="v"?"#2980b9":"#7f8c8d"):"";
+    h+='<div class="'+cls+'" data-action="goDay" data-ds="'+ds+'">';
+    h+='<div class="dc-n" style="'+(isT?"font-weight:700;color:var(--g)":hc?"color:"+hc:"")+'">'+d+"</div>";
+    if(hd)h+='<div class="dc-h" style="color:'+hc+'">'+xe(hd[0])+"</div>";
+    var names=[];
+    vs.forEach(function(v){
+      var n=v.walkin?v.walkin.split(" ")[0]:(function(){var c=S.customers.find(function(c){return c.id===v.custId});return c?c.name.split(" ")[0]:"?"})();
+      if(names.indexOf(n)<0)names.push(n);
+    });
+    names.slice(0,3).forEach(function(n){h+='<div class="dc-c">'+xe(n)+"</div>"});
+    if(names.length>3)h+='<div style="font-size:7px;color:var(--mut)">+'+(names.length-3)+"</div>";
+    h+="</div>";
+  }
+  h+="</div></div>";
+  var mv=vim(V.yr,V.mo),rev=mv.reduce(function(s,v){return s+vt(v)},0);
+  h+=mv.length
+    ?'<div class="card" style="padding:9px 13px;margin-top:9px;font-size:13px"><span style="color:var(--mut)">סיכום: </
